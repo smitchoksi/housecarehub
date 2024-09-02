@@ -1,0 +1,110 @@
+{% extends "User Templates/Base.html" %}
+
+{% block content %}
+
+    <div class="container-fluid">
+      <div class="row justify-content-center">
+        <div id="signupbox" class="col-11 col-sm-10 col-md-7 col-lg-5 col-xl-4">     <!-- For Adjustment -->
+
+          <div class="row">
+            <div id="signupheading" class="col text-center">
+                <h2>Sign Up</h2>
+            </div>
+          </div>
+          <form action="/register" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div id="signupcontent" class="row justify-content-center align-items-center ">
+              {% if error %}
+
+              <div class="col-11 col-sm-9">
+                <div class="form-floating mb-4">
+                  <div class="alert alert-danger" role="alert"><b>Error!  </b>{{error}}</div>
+                </div>
+              </div>
+              {% endif %}
+              <div class="col-11 col-sm-9">
+                <div class="form-floating mb-4">
+                  <input type="text" class="form-control" id="floatingInput1" required name="ufirstname" value="{{udata.fname}}" placeholder="name@example.com">
+                  <label for="floatingInput1">Enter Your First Name</label>
+                </div>
+              </div>
+              <div class="col-11 col-sm-9">
+                <div class="form-floating mb-4">
+                  <input type="text" class="form-control" id="floatingInput2" required name="ulastname" value="{{udata.lname}}" placeholder="name@example.com">
+                  <label for="floatingInput2">Enter Your Last Name</label>
+                </div>
+              </div>
+              <div class="col-11 col-sm-9">
+                <div class="form-floating mb-4">
+                  <input type="email" pattern="[a-z0-9._%+\-]+@[-z0-9.\-]+\.[a-z]{2,}$" class="form-control" id="email" name="uemail" value="{{udata.email}}" required placeholder="name@example.com"
+                            oninput="
+									const email = this.value.trim();
+									const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+									if (!isValidEmail) {
+										this.setCustomValidity('Please enter a valid email address');
+										this.reportValidity();
+									} else {
+										this.setCustomValidity('');
+										this.reportValidity();
+									}"
+                  />
+                  <label for="email">Enter Your Email</label>
+                </div>
+              </div>
+
+              <div class="col-11 col-sm-9">
+                <div class="form-floating mb-4">
+                  <input type="tel" pattern="[0-9]{10}" class="form-control" id="floatingInput4" name="umobileno" value="{{udata.contactno}}" required placeholder="name@example.com">
+                  <label for="floatingInput4">Enter Your Mobile Number</label>
+                </div>
+              </div>
+
+              <div class="col-11 col-sm-9 mb-4">
+                <div class="row">
+                  <div class="col-12 col-sm-6 mb-4 mb-sm-0">
+                    <select class="form-select p-3" name="ugender" required aria-label="Default select example">
+                      <option value="">Select Gender</option>
+                      <option value="Male">Male</option>
+                      <option value="Female">Female</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+                  <div class="col-12 col-sm-6">
+                    <div class="form-floating">
+                      <input type="number" class="form-control" name="uage" value="{{udata.uage}}" id="floatingInput5" required  placeholder="name@example.com">
+                      <label for="floatingInput5">Enter Your Age</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-11 col-sm-9">
+                <div class="form-floating mb-4">
+                  <input type="password" class="form-control" id="floatingPassword6"  required name="ucreatepassword" value = "{{udata.create_password}}" placeholder="Password">
+                  <label for="floatingPassword6">Create Password</label>
+                </div>
+              </div>
+              <div class="col-11 col-sm-9">
+                <div class="form-floating mb-4">
+                  <input type="password" class="form-control" id="floatingPassword7" required name="ureenterpassword" value = "{{udata.reenter_password}}" placeholder="Password">
+                  <label for="floatingPassword7">Re Enter Password</label>
+                </div>
+              </div>
+              <div class="col-11 col-sm-9">
+                <div class="row justify-content-center">
+                  <div class="col-auto">
+                    <button type="submit" class="btn btn-primary mb-3 mt-2">Sign up</button>
+                  </div>
+                </div>
+              </div>
+              <div class="col-11 col-sm-9 mt-2">
+                <p>Already Have Account? <a href="/loginpage">Login</a></p>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div><!-- Container ending tag -->
+
+{% endblock %}

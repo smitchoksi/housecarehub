@@ -1,0 +1,132 @@
+{% extends "Serviceman Templates/ServicemanBase.html" %}
+
+{% block content %}
+
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-12 col-sm-9 col-md-10"><!--For Adjustment-->
+
+                <div id="MyBookingHeadingBox" class="row">
+                    <div class="col"><h1 class="text-center">Task History</h1></div>
+                </div>
+                <div id="MyBookingSubHeadingBox"  class="row text-center justify-content-center">
+                    <div class="col pt-2 pb-2">
+                        <a class="TaskLinks" type="button" data-bs-toggle="modal" data-bs-target="#TaskFilterByDateModal">By Date</a>
+                    </div>
+                    <div class="col pt-2 pb-2">
+                        <a class="TaskLinks" type="button" data-bs-toggle="modal" data-bs-target="#TaskFilterByMonthModal">By Month</a>
+                    </div>
+                </div>
+
+                <div id="BookingListBox" class="row justify-content-center">
+                    {% if flag1 == 0 and flag2 == 0 %}
+                        <h4 class="mb-5 mt-2 text-center">Empty</h4>
+                    {% else %}
+                    {% endif %}
+
+                    {% for i in tasks %}
+<!--                    <h1>{{i.complete_time}} == {{date}}</h1>-->
+                        {% if i.complete_time == date %}
+                            <div  class="col-10 mb-3">
+                                <div class="card mb-3" data-aos="zoom-in" data-aos-duration="500">
+                                  <div id="Bookingitem" class="row g-0">
+                                    <div class="col-12 col-md-4 align-self-center p-2 ps-md-2 pe-md-2 p-lg-3 p-xl-5">
+                                        <img src="/media/{{ i.booking_id.service_id.simage }}" class="img-fluid rounded" alt="...">
+                                    </div>
+                                        <div class="col-md-8 col-12 mt-xl-3 mt-xxl-4">
+                                          <div class="card-body">
+                                            <h4 class="card-title mb-3">{{i.booking_id.service_id}}</h4>
+                                                <p><b>Allocated On:</b> {{i.assign_time}}</p>
+                                                <p><b>Picked On:</b> {{i.pick_time}}</p>
+                                                {% for cp in tasks_copy %}
+                                                    {% if i.id == cp.id %}
+                                                        <p><b>Complete On:</b> {{cp.complete_time}}</p>
+                                                    {% endif %}
+                                                {% endfor %}
+                                          </div>
+                                        </div>
+                                  </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                    {% for i in closed_tasks %}
+<!--                    <h1>{{i.complete_time}} == {{date}}</h1>-->
+                        {% if i.close_task == date %}
+                            <div  class="col-10 mb-3">
+                                <div class="card mb-3" data-aos="zoom-in" data-aos-duration="500">
+                                  <div id="Bookingitem" class="row g-0">
+                                    <div class="col-12 col-md-4 align-self-center p-2 ps-md-2 pe-md-2 p-lg-3 p-xl-5">
+                                        <img src="/media/{{ i.booking_id.service_id.simage }}" class="img-fluid rounded" alt="...">
+                                    </div>
+                                        <div class="col-md-8 col-12 mt-xl-3 mt-xxl-4">
+                                          <div class="card-body">
+                                            <h4 class="card-title mb-3">{{i.booking_id.service_id}}</h4>
+                                                <p><b>Allocated On:</b> {{i.assign_time}}</p>
+                                                <p><b>Picked On:</b> {{i.pick_time}}</p>
+                                                {% for cp in closed_tasks_copy %}
+                                                    {% if cp.id == i.id %}
+                                                        <p><b>Complete On:</b> {{cp.close_task}}</p>
+                                                    {% endif %}
+                                                {% endfor %}
+                                          </div>
+                                        </div>
+                                  </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!-- Filter By Date -->
+<div class="modal fade" id="TaskFilterByDateModal" tabindex="-1" aria-labelledby="TaskFilterByDateModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title text-center fs-5" id="TaskFilterByDateModalLabel">Filter</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="/datefilter" method="post">
+          {% csrf_token %}
+          <div class="modal-body row text-center justify-content-center">
+              <div class="col-6">
+                <input type="date" name="date" required>
+              </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Proceed</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Filter By Month Year -->
+<div class="modal fade" id="TaskFilterByMonthModal" tabindex="-1" aria-labelledby="TaskFilterByMonthModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title text-center fs-5" id="TaskFilterByMonthModalLabel">Filter</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="/monthyearfilter" method="post">
+          {% csrf_token %}
+          <div class="modal-body row text-center justify-content-center">
+              <div class="col-6">
+                <input type="month" name="monthyear" required>
+              </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Proceed</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

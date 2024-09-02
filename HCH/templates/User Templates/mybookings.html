@@ -1,0 +1,187 @@
+{% extends "User Templates/Base.html" %}
+
+{% block content %}
+
+{% if messages %}
+    {% for msg in messages %}
+      {% if msg.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+        <script>
+          Swal.fire({
+          title: "Success!",
+          text: "{{msg}}",
+          icon: "success"
+          });
+        </script>
+      {% elif msg.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+        <script>
+          Swal.fire({
+          title: "Opps...",
+          text: "{{msg}}",
+          icon: "error"
+          });
+        </script>
+      {% endif %}
+    {% endfor %}
+{% endif %}
+
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-12 col-sm-9 col-md-10"><!--For Adjustment-->
+
+                <div id="MyBookingHeadingBox" class="row">
+                    <div class="col"><h1 class="text-center">My Bookings</h1></div>
+                </div>
+                <div id="MyBookingSubHeadingBox"  class="row text-center justify-content-center">
+                    <div class="col pt-2 pb-2">
+                        <a id="BookingLinks" href="/mybookings/{{'On Going'}}">On going</a>
+                    </div>
+                    <div class="col pt-2 pb-2">
+                        <a id="BookingLinks" href="/mybookings/{{'Completed'}}">Completed</a>
+                    </div>
+                    <div class="col pt-2 pb-2">
+                        <a id="BookingLinks" href="/mybookings/{{'Cancelled'}}">Cancelled</a>
+                    </div>
+                </div>
+
+                <div id="BookingListBox" class="row justify-content-center">
+                    {% if bookings %}
+
+                    {% else %}
+                        <h4 class="mb-5 mt-2 text-center">Empty</h4>
+                     {% endif %}
+                  {% for i in bookings %}
+                    <div  class="col-10 mb-3">
+                    <div class="card mb-3" data-aos="zoom-in" data-aos-duration="500">
+                      <div id="Bookingitem" class="row g-0" >
+                        <div class="col-12 col-md-4 align-self-center p-2 ps-md-2 pe-md-2 p-lg-3 p-xl-5">
+                            <img src="/media/{{ i.service_id.simage }}" class="img-fluid rounded" alt="...">
+                        </div>
+                            <div class="col-md-8 col-12 mt-xl-3 mt-xxl-4">
+                              <div class="card-body" >
+                                <h4 class="card-title mb-3">{{i.service_id}}</h4>
+
+                                {% if status == "Cancelled" %}
+                                  <p><b>Service Book On:</b> {{i.booking_date_time}}</p>
+                                  <p><b>Booking Cancelled On:</b> {{i.cancelledtime}}</p>
+                                {% endif %}
+
+                                {% if status == "On Going" %}
+                                <p class="card-text"><b>Service On:</b> {{i.booking_provide_date}}, {{i.booking_provide_time}} <a href="/bookingdetails/{{i.id}}">View more</a></p>
+                                {% else %}
+                                  <p><a href="/bookingdetails/{{i.id}}">View more</a></p>
+                                {% endif %}
+<!--                                <a href="/bookingdetails/{{i.id}}"><p class="card-text mb-2">View more</p></a>-->
+<!--                                <p class="card-text">if you have any complaint than <a href="#" type="button" data-bs-toggle="modal" data-bs-target="#ContactUs">click here</a></p>-->
+
+                                {% if status == "On Going" %}
+                                    <a type="button" class="btn btn-primary me-2 mt-2" data-bs-toggle="modal" data-bs-target="#CheckBookingStatusModal{{i.id}}">Check Status</a>
+                                    {% for j in task %}
+
+                                      {% if i == j.booking_id %}
+                                        {% if j.need_sparepart == True %}
+                                            <a href="/sp_payment_summary/{{j.id}}"><p class="card-text me-2 btn btn-primary mt-2">Make Payment</p></a>
+                                        {% endif %}
+                                        {% if j.status != "Picked" %}
+                                            <a class="btn btn-primary me-2 mt-2" data-bs-toggle="modal" data-bs-target="#CancelBookingAlertModal{{i.id}}">Cancel Booking</a>
+                                        {% endif %}
+                                      {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+
+                                {% if status == "Completed" %}
+                                <a href="/generate_invoice/{{i.id}}"><p class="card-text me-2 btn btn-primary mt-2">Download Reciept</p></a>
+                                <a href="/feedback_page/{{i.id}}" type="button" class="btn btn-primary me-2 mt-2"><p class="card-text">Feedback</p></a>
+                                {% endif %}
+
+                              </div>
+                            </div>
+        
+                      </div>
+                    </div>
+                </div>
+
+                    <!-- Check Status Modals -->
+                    <div class="modal fade" id="CheckBookingStatusModal{{i.id}}" tabindex="-1" aria-labelledby="CheckBookingStatusModalLabel" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="CheckBookingStatusModalLabel">Booking Status</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body container-fluid bg-secondary-subtle">
+                            <div class="row ms-3">
+                                <div class="col-6 fw-semibold">
+                                    <p>Booking on</p>
+                                </div>
+                                <div class="col-6">
+                                    <p>: {{i.booking_date_time}}</p>
+                                </div>
+                                <div class="col-6 fw-semibold">
+                                    <p>Booking Provide on</p>
+                                </div>
+                                <div class="col-6">
+                                    <p>: {{i.booking_provide_date}}, {{i.booking_provide_time}}</p>
+                                </div>
+                                <div class="col-6 fw-semibold">
+                                    <p>Assign Work to Serviceman</p>
+                                </div>
+                                <div class="col-6">
+                                    {% for t in task %}
+                                        {% if t.booking_id == i %}
+                                            {% if t.serviceman_id != None %}
+                                                <p>: <i class="bi bi-check-circle-fill text-success"></i></p>
+                                            {% else %}
+                                                <p>: --</p>
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <div class="col-6 fw-semibold">
+                                    <p>Serviceman Start Work</p>
+                                </div>
+                                <div class="col-6 ">
+                                    {% for t in task %}
+                                        {% if t.booking_id == i %}
+                                            {% if t.start_time != None %}
+                                                <p>: <i class="bi bi-check-circle-fill text-success"></i></p>
+                                            {% else %}
+                                                <p>: --</p>
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <div class="col-6 fw-semibold">
+                                    <p>Booking Work Completed</p>
+                                </div>
+                                <div class="col-6">
+                                    <p>: --</p>
+                                </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Cancel Booking Alert Modal -->
+                    <div class="modal fade" id="CancelBookingAlertModal{{i.id}}" tabindex="-1" aria-labelledby="CancelBookingAlertModalLabel{{i.id}}" aria-hidden="true">
+                        <div class="modal-dialog modal-sm">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="CancelBookingAlertModalLabel{{i.id}}">Are You Sure Cancel?</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-footer">
+                                    <a type="button" href="/cancelbooking/{{i.id}}" class="btn btn-primary me-3">Yes</a>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                  {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+
+{% endblock %}

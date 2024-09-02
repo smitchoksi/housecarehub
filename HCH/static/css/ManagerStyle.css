@@ -1,0 +1,96 @@
+.menuitemstyle{     /* design for menu */
+    border: 2px solid cornflowerblue;
+    box-shadow: -4px -4px 10px lightgray,4px 4px 10px lightgray;
+    border-radius: 10px;
+}
+
+.menuitemstyle:hover{    /* design for menu */
+    box-shadow: -2px -2px 6px dodgerblue,2px 2px 6px dodgerblue;
+}
+
+#aboutus{       /* spacing for aboutus content */
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+.aboutusitemstyle{      /* color for about us items */
+    color: silver;
+}
+
+.aboutuslinkstyle{      /* color for about us links */
+    color:silver;
+}
+
+.aboutuslinkstyle:hover{    /* hover design for about us links */
+    color: white;
+}
+
+#menumainrow{
+    margin-top: 80px;
+    margin-bottom: 100px;
+}
+
+#menuheading{
+    margin-bottom: 40px;
+
+}
+
+.ServicemanListImg{
+    height: 85px;
+    width: 85px;
+    border: 2px solid black;
+    border-radius: 50%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.ServicemanListHeading
+{
+    margin-top: 80px;
+    margin-bottom: 50px;
+}
+
+.ServicemanList{
+    box-shadow: -4px -4px 10px lightgray,4px 4px 10px lightgray;
+    border-radius: 10px;
+}
+
+.ServicemanList:hover{
+    box-shadow: -2px -2px 10px lightblue,2px 2px 10px lightblue;
+}
+
+#TaskHeadingBox{
+    margin-top: 40px;
+    padding-top: 50px;
+    padding-bottom: 20px;
+    background-color:mediumpurple;
+    color:white;
+    border: 1px solid lightgray;
+}
+
+#TaskSubHeadingBox{
+    padding-top: 5px;
+    padding-bottom: 5px;
+    background-color:mediumpurple;
+    color:white;
+}
+
+.TaskLinks:active{
+    color: white;
+}
+
+.TaskLinks:hover{
+    color: white;
+}
+
+.TaskLinks{
+    text-decoration: none;
+    color: lightgrey;
+}
+
+#TaskListBox
+{
+    padding-top: 50px;
+    padding-bottom: 20px;
+    background-color: lightgray;
+}

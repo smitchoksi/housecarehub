@@ -1,0 +1,80 @@
+{% extends "User Templates/Base.html" %}
+
+{% block content %}
+{% if messages %}
+    {% for msg in messages %}
+      {% if msg.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+        <script>
+          Swal.fire({
+          title: "Opps...",
+          text: "{{msg}}",
+          icon: "error"
+          });
+        </script>
+      {% endif %}
+    {% endfor %}
+{% endif %}
+        <div class="contanier-fluid">
+<!--            <div class="row text-center" style="margin-top:100px;">-->
+<!--                <div class="col">-->
+<!--                    <div class="row justify-content-center">-->
+<!--                        <div class="col">-->
+<!--                            <h2 >Submit Feedback</h2>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+        </div>
+        <div class="container d-flex justify-content-center mt-3">
+            <div class="card text-center feedbackcard" style="margin-top:70px; margin-bottom:50px;" data-aos="zoom-out" data-aos-duration="1000">
+                <div class="row text-center">
+                    <div class="col">
+                        <div class="row justify-content-center mt-4">
+                            <div class="col">
+                                <h2>Feedback</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <form action="/submitfeedback" method="post">
+                    {% csrf_token %}
+                    <input type="number" name="booking_id" value="{{booking_id}}" hidden>
+                   <div class="row justify-content-center mt-4">
+                    <div class="col-9">
+                        <div class="form-floating">
+                          <input type="text" name="title" value="{{title}}" class="form-control" id="floatingInput" required placeholder="name@example.com">
+                          <label for="floatingInput">Feedback Title</label>
+                        </div>
+                    </div>
+                   </div>
+                   <div class="row justify-content-center">
+                    <div class="col-9">
+                    <div class=" mt-4">
+                        <div class="form-floating">
+                          <textarea class="form-control" style="height: 100px" name="description"  required placeholder="Leave a comment here" id="floatingTextarea">{{desc}}</textarea>
+                          <label for="floatingTextarea">Feedback Description</label>
+                        </div>
+                    </div>
+                    </div>
+                   </div>
+                        <div class="rate bg-success py-3 text-white mt-5">
+                            <h6 class="mb-0">Rate Our Service</h6>
+                            <div class="rating">
+                                <input type="radio" name="rating" value="5" id="5"><label for="5">☆</label>
+                                <input type="radio" name="rating" value="4" id="4"><label for="4">☆</label>
+                                <input type="radio" name="rating" value="3" id="3"><label for="3">☆</label>
+                                <input type="radio" name="rating" value="2" id="2"><label for="2">☆</label>
+                                <input type="radio" name="rating" value="1" id="1"><label for="1">☆</label>
+                            </div>
+                            <div class="buttons px-4">
+                                <button type="submit" class="btn btn-warning btn-block rating-submit" style="color:green;">Submit</button>
+                            </div>
+                        </div>
+                </form>
+            </div>
+        </div>
+{% endblock %}
+
+                        
+
+            

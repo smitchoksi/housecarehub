@@ -1,0 +1,65 @@
+{% extends "Serviceman Templates/ServicemanBase.html" %}
+
+{% block content %}
+
+{% if messages %}
+    {% for msg in messages %}
+      {% if msg.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+        <script>
+          Swal.fire({
+          title: "Success!",
+          text: "{{msg}}",
+          icon: "success"
+          });
+        </script>
+      {% elif msg.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+        <script>
+          Swal.fire({
+          title: "Opps...",
+          text: "{{msg}}",
+          icon: "error"
+          });
+        </script>
+      {% endif %}
+    {% endfor %}
+{% endif %}
+
+  <div class="container-fluid">
+      <!-- Main Category Menu-->
+      <div id="menumainrow" class="row justify-content-center background">
+        <div id="menuheading" class="col-12 col-md-10">
+          <p class="text-center fw-semibold fs-1" data-aos="zoom-in" data-aos-offset="200">Select Option!</p>
+        </div>
+  
+        <div id="categorymainrow" class="row justify-content-center" data-aos="zoom-in" data-aos-offset="200">
+          <div class="col-sm-7 col-md-9 col-lg-7 col-12">
+            <div class="row justify-content-evenly ">                    
+                <div class="col-6  col-md-3 col-5">
+                  <div class="row justify-content-center text-center">
+                    <div class="menuitemstyle col-11 mt-4 mt-sm-5 mt-md-3 mt-lg-4">
+                      <a href="/today_task"><img src="media/StaticPhotos/today logo.jpg" class="img-fluid" alt="..."></a>
+                    </div>
+                    <p>Today's Tasks</p>
+                  </div>
+                </div>
+
+                <div class="col-6 col-md-3 col-5">
+                  <div class="row justify-content-center text-center">
+                    <div class="menuitemstyle col-11 mt-4 mt-sm-5 mt-md-3 mt-lg-4">
+                      <a href="/task_history"><img src="media/StaticPhotos/History logo.jpg" class="img-fluid" alt="..."></a>
+                    </div>
+                    <p>History</p>
+                  </div>
+                </div>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+  </div> <!-- container ending tag -->
+
+
+{% endblock %}
+
+

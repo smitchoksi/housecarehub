@@ -1,0 +1,144 @@
+{% extends "Serviceman Templates/ServicemanBase.html" %}
+
+{% block content%}
+<script>
+    function check_sparepart()
+    {
+        console.log("function called");
+        $(document).ready(function(){
+                $.ajax({
+                    type: 'GET',
+                    url: '/fetch_sparepart/{{sptitle_obj.id}}/{{task_id}}',
+                    success: function(response)
+                    {
+                        var temp = document.getElementById("floatingSelect2").value;
+                        console.log("data",temp);
+                        for(var key in response.sparepart)
+                        {
+                            if(temp==response.sparepart[key].id)
+                            {
+                              if(response.sparepart[key].sparepart_quantity==null)
+                              {
+                                console.log(response.sparepart[key].sparepart_quantity);
+                                document.getElementById("quantity").style.display = "none";
+                              }
+                              else
+                              {
+                                console.log(response.sparepart[key].sparepart_quantity);
+                                document.getElementById("quantity").style.display = "block";
+                              }
+                            }
+                        }
+                    },
+                    error: function(response)
+                    {
+                      alert("An Error");
+                    },
+                });
+        });
+    }
+    </script>
+{% if success %}
+  <script>
+    Swal.fire({
+    title: "Success!",
+    text: "{{success}}",
+    icon: "success"
+    });
+  </script>
+{% endif %}
+{% if error %}
+  <script>
+    Swal.fire({
+    title: "Opps...",
+    text: "{{error}}",
+    icon: "error"
+    });
+  </script>
+{% endif %}
+    <div class="container-fluid">
+<!--      <h1>{{sptitle_obj.sp_category}}</h1>-->
+      <div class="row justify-content-center">
+        <div id="loginbox" class="col-11 col-sm-10 col-md-7 col-lg-5 col-xl-4">     <!-- For Adjustment -->
+
+          <div class="row">
+            <div id="loginheading" class="col text-center">
+                <h2>Update Cost</h2>
+            </div>
+          </div>
+          <form action="/{{url}}" method="post">
+            {% csrf_token %}
+            <input type="number" value="{{task_id}}" name="task_id" hidden>
+            <div id="logincontent" class="row justify-content-center align-items-center ">
+
+              {% if sparepart %}
+                  <div class="col-11 col-sm-9">
+                    <div class="form-floating mb-4">
+                      <input type="text" name="title_id" readonly value="{{sptitle_obj.sp_title}}" class="form-control" id="floatingPassword" required placeholder="Password">
+                      <label for="floatingPassword">Selected Title</label>
+                    </div>
+                  </div>
+                  <div class="col-11 col-sm-9 mb-4">
+                    <div class="form-floating">
+                      <select class="form-select" name="sparepart" onchange="check_sparepart();" required id="floatingSelect2" aria-label="Floating label select example">
+                        <option value="None">None</option>
+                        {% for i in sparepart %}
+                          <option id="{{i.id}}" value="{{i.id}}">{{i.sparepart_name}}</option>
+                        {% endfor %}
+                      </select>
+                      <label for="floatingSelect2">Select Name</label>
+                    </div>
+                  </div>
+                {% if sptitle_obj.sp_category.catname != "Appliance" %}
+                  <div id="Squarefeet" class="col-11 col-sm-9 mb-4" style="display: block;">
+                    <div class="form-floating mb-3">
+                      <input type="number" class="form-control" id="floatingInput_sqrfeet" name="sqrfeet" value="0" placeholder="">
+                      <label id="floatingInput_sqrfeet1" for="floatingInput_sqrfeet">Enter Square Feet</label>
+                    </div>
+                  </div>
+                {% else %}
+                  <div id="quantity" class="col-11 col-sm-9 mb-4" style="display: block;">
+                    <div class="form-floating mb-3">
+                      <input type="number" class="form-control" id="floatingInput" name="quantity" value="None" placeholder="">
+                      <label id="quantity_lable" for="floatingInput">Enter Quantity</label>
+                    </div>
+                  </div>
+                {% endif %}
+                  <div class="col-11 col-sm-9">
+                    <div class="row">
+                      <div class="col-12">
+                        <a href="/updatespareparts_page/{{task_id}}" class="btn btn-primary mb-3 me-2"><i class="bi bi-arrow-left-circle-fill ps-2 pe-2"></i></a>
+                        <button type="submit" class="btn btn-primary mb-3 me-2">Update</button>
+                        <a href="/view_updated_sp/{{task_id}}" class="btn btn-primary mb-3">Done</a>
+                    </div>
+                  </div>
+              {% else %}
+                <div class="col-11 col-sm-9 mb-4">
+                  <div class="form-floating">
+                    <select class="form-select" name="title_id" id="floatingSelect" aria-label="Floating label select example">
+                      <option value="None">None</option>
+                      {% for i in titles %}
+                        <option value="{{i.id}}">{{i.sp_title}}</option>
+                      {% endfor %}
+                    </select>
+                    <label for="floatingSelect">Select Title</label>
+                  </div>
+                </div>
+              <div class="col-11 col-sm-9">
+                <div class="row">
+                  <div class="col-12">
+                    <a href="/picked_task" class="btn btn-primary mb-3 me-2"><i class="bi bi-arrow-left-circle-fill ps-2 pe-2"></i></a>
+                    <button type="submit" class="btn btn-primary mb-3">Let's Select Name</button>
+                    <a href="/view_updated_sp/{{task_id}}" class="btn btn-primary mb-3">Done</a>
+                  </div>
+                </div>
+              </div>
+              {% endif %}
+            </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div> <!-- Container Ending tag -->
+
+{% endblock %}

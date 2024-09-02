@@ -1,0 +1,188 @@
+{% extends "User Templates/Base.html" %}
+
+{% block content %}
+{% if messages %}
+  {% for msg in messages %}
+    {% if msg.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+      <script>
+        Swal.fire({
+        title: "Opps...",
+        text: "{{msg}}",
+        icon: "error"
+        });
+      </script>
+    {% endif %}
+  {% endfor %}
+{% endif %}
+  <div class="container-fluid">
+    <div class="row justify-content-center">
+      <div id="paymentsummarybox" class="col-11 col-sm-10 col-md-9 col-lg-6">     <!--For Adjustment-->
+
+        <div  class="row justify-content-center">
+            <div id="paymentsummaryheading" class="col-12">   <!--For Adjustment-->
+              <h2 class="text-center mt-3 mb-3">Payment Summary</h2>
+            </div>
+        </div>
+            
+        <div id="paymentsummarycontent" class="row justify-content-center ">
+          <div class="col-12 col-sm-10 col-md-9 col-lg-8 fw-medium"><!--For Adjustment-->
+            <div class="row">
+              <div class="col-8 col-md-9">
+                <p>{{service_name}}</p>
+                <!--<p>Double Door Fridge (Non-Inverter) Repair:</p>-->
+              </div>
+              <div class="col-4 col-md-3">
+                <p><i class="bi bi-currency-rupee"></i>{{price}}</p>
+                <!--<p><i class="bi bi-currency-rupee"></i>1500</p>-->
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-8 col-md-9">
+                <p>Tax:</p>
+              </div>
+              <div class="col-4 col-md-3">
+                <p><i class="bi bi-currency-rupee"></i>{{tax}}</p>
+              </div>
+            </div>
+            <div class="row border-top border-2 border-success-subtle">
+              <div class="col-8 col-md-9">
+                <p>Total Payment:</p>
+              </div>
+              <div class="col-4 col-md-3">
+                <p><i class="bi bi-currency-rupee"></i>{{total}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row justify-content-center">
+      <div id="bookingdetailsbox" class="col-11 col-sm-10 col-md-9 col-lg-6 fw-semibold">     <!--For Adjustment-->
+
+        <div id="bookingdetailsheading" class="row justify-content-center">
+          <div class="col-12 mt-4 mb-3">   <!--For Adjustment-->
+            <h3 class="text-center">Fill Your Details</h3>
+          </div>
+        </div>
+
+        <div id="bookingdetailscontent" class="row justify-content-center">
+          <div class="col-11 col-sm-10 col-md-9 col-lg-8"> <!-- For Adjustment -->
+            <div class="row">
+              <div class="col">
+                <form action="/insertbookingdata" method="post" enctype="multipart/form-data">
+                  {% csrf_token %}
+                  <input type="number" hidden  name="service_id" value="{{service_id}}">
+                  <div class="form-floating mb-3">
+                    <input type="text" name="name" value="{{name}}" class="form-control" id="floatingInput" placeholder="" required>
+                    <label for="floatingInput">Enter Your Name</label>
+                  </div>
+                  <div class="form-floating mb-3">
+                    <input type="tel" name="contactno" value="{{contactno}}" pattern="[0-9]{10}" class="form-control" id="floatingInput" placeholder="" required>
+                    <label for="floatingInput">Enter Your Contact No</label>
+                    <p style="font-size: 13px;" class="fw-normal">Example like: 8866354728</p>
+                  </div>
+                  <div class="form-floating mb-3">
+                    <textarea class="form-control" name="address" placeholder="" id="floatingTextarea2" required style="height: 100px">{{address}}</textarea>
+                    <label for="floatingTextarea2">Enter Your Address</label>
+                  </div>
+                  <div class="form-floating mb-3">
+                    <select class="form-select" id="floatingSelect" name="area" aria-label="Floating label select example">
+                      <option selected>None</option>
+                      <option value="Alam Roza">Alam Roza</option>
+                      <option value="Ambawadi">Ambawadi</option>
+                      <option value="Amraiwadi">Amraiwadi</option>
+                      <option value="Asarwa">Asarwa</option>
+                      <option value="Badarkha">Badarkha</option>
+                      <option value="Bopal">Bopal</option>
+                      <option value="Bahiyal">Bahiyal</option>
+                      <option value="Bapunagar">Bapunagar</option>
+                      <option value="Behrampura">Behrampura</option>
+                      <option value="Bodakdev">Bodakdev</option>
+                      <option value="Maninagar">Maninagar</option>
+                      <option value="Chaloda">Chaloda</option>
+                      <option value="Chandkheda">Chandkheda</option>
+                      <option value="Chandlodiya">Chandlodiya</option>
+                      <option value="Dabhoda">Dabhoda</option>
+                      <option value="Dariyapur">Dariyapur</option>
+                      <option value="Detroj">Detroj</option>
+                      <option value="Ellis Bridge">Ellis Bridge</option>
+                      <option value="Ghatlodiya">Ghatlodiya</option>
+                      <option value="Ghodasar">Ghodasar</option>
+                      <option value="Girdhar Nagar">Girdhar Nagar</option>
+                      <option value="Gita Mandir">Gita Mandir</option>
+                      <option value="Gomtipur">Gomtipur</option>
+                      <option value="Gota">Gota</option>
+                      <option value="Isanpur">Isanpur</option>
+                      <option value="Jamalpur">Jamalpur</option>
+                      <option value="Jagatpur">Jagatpur</option>
+                      <option value="Jawahar Chock">Jawahar Chock</option>
+                      <option value="Jodhpur">Jodhpur</option>
+                      <option value="Juhapura">Juhapura</option>
+                      <option value="Khanpur">Khanpur</option>
+                      <option value="Kalupur">Kalupur</option>
+                      <option value="Kalyanpura">Kalyanpura</option>
+                      <option value="Khadia">Khadia</option>
+                      <option value="Khodiyar Nagar">Khodiyar Nagar</option>
+                      <option value="Khokhra">Khokhra</option>
+                      <option value="Lambha">Lambha</option>
+                      <option value="Mirzapur">Mirzapur</option>
+                      <option value="Makarba">Makarba</option>
+                      <option value="Maninagar">Maninagar</option>
+                      <option value="Memnagar">Memnagar</option>
+                      <option value="Motera">Motera</option>
+                      <option value="Naroda">Naroda</option>
+                      <option value="Nikol">Nikol</option>
+                      <option value="Nava vadaj">Nava vadaj</option>
+                      <option value="Navrangpura">Navrangpura</option>
+                      <option value="Odhav">Odhav</option>
+                      <option value="Paldi">Paldi</option>
+                      <option value="Palodiya">Palodiya</option>
+                      <option value="Rajpur Gomtipur">Rajpur Gomtipur</option>
+                      <option value="Ramol">Ramol</option>
+                      <option value="Ranip">Ranip</option>
+                      <option value="Shahpur">Shahpur</option>
+                      <option value="Shilaj">Shilaj</option>
+                      <option value="Sabarmati">Sabarmati</option>
+                      <option value="Saraspur">Saraspur</option>
+                      <option value="Sardar Nagar">Sardar Nagar</option>
+                      <option value="Sarkhej">Sarkhej</option>
+                      <option value="Shah-e-alam">Shah-e-alam</option>
+                      <option value="Shahpur">Shahpur</option>
+                      <option value="Shahibaug">Shahibaug</option>
+                      <option value="Shashtri Nagar">Shashtri Nagar</option>
+                      <option value="Shubhas Bridge">Shubhas Bridge</option>
+                      <option value="Sukhrampura">Sukhrampura</option>
+                      <option value="Thakkar Bapa Nagar">Thakkar Bapa Nagar</option>
+                      <option value="Thaltej">Thaltej</option>
+                      <option value="Usmanpura">Usmanpura</option>
+                      <option value="Vatrapur">Vatrapur</option>
+                      <option value="Vastral">Vastral</option>
+                      <option value="Vejalpur">Vejalpur</option>
+                    </select>
+                    <label for="floatingSelect">Select Area</label>
+                  </div>
+                  <div class="form-floating mb-3">
+                    <input type="text" name="city" readonly value="Ahmedabad"  class="form-control" id="floatingInputDisabled"  placeholder="" required>
+                    <label for="floatingInputDisabled">Enter Your City</label>
+                  </div>
+                  <div class="form-floating mb-3">
+                    <input type="text" name="state" readonly value="Gujarat" class="form-control" id="floatingInputDisabled" placeholder="" required>
+                    <label for="floatingInputDisabled">Enter Your State</label>
+                  </div>
+                  <div class="form-floating mb-3">
+                    <input type="text" name="country" readonly value="India" class="form-control" id="floatingInputDisabled" placeholder="" required>
+                    <label for="floatingInputDisabled">Enter Your Country</label>
+                  </div>
+                  <div class="col-auto">
+                    <button type="submit" class="btn btn-primary mt-3 mb-3">Select Time Slot</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+            
+{% endblock %}

@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <title>Invoice</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+	   <style>
+    @page {
+        size: a4 portrait;
+       /* @frame header_frame {           /* Static Frame
+            -pdf-frame-content: header_content;
+            left: 40pt; width: 512pt; top: 50pt; height: 40pt;
+        }
+        @frame content_frame {          /* Content Frame
+             /*border:2px solid grey; left: 40pt; width: 512pt; top: 25pt; height: 810pt;
+        }
+        @frame footer_frame {           /* Another static Frame
+            -pdf-frame-content: footer_content;
+            left: 40pt; width: 512pt; top: 20pt; height: 20pt;
+        }*/
+   }
+
+   .userreportheading{
+
+    padding-top: 30px;
+
+   }
+  .userreporttable{
+    padding-top: 5px;
+    padding-left:30pt;
+    font-size:18px;
+    text-align: start;
+
+  }
+  .managerreportheading{
+    text-align:center;
+    padding-top:30px;
+     font-size:25px;
+     border-bottom:2px solid grey;
+     background-color:lightblue;
+  }
+  .invoiceend{
+
+
+    text-align: end;
+  }
+  .userreportpaymentdetail{
+    text-align: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-size: 20px;
+  }
+  .userreportpayment{
+    text-align: center;
+    font-size:15px;
+    padding-left:30pt;
+    padding-top: 5px;
+  }
+
+  #Amount{
+    padding-left: 20px;
+  }
+
+</style>
+
+  </head>
+  <body>
+{% load get_sp_amount %}
+     <div>
+       <table class="userreporttable">
+          <tr>
+              <td class="userreportheading"><h1>House Care Hub</h1></td>
+              <td class="invoiceend userreportheading"><h1>Invoice</h1> </td>
+          </tr>
+        </table>
+    </div>
+    <hr>
+    <div>
+      <table class="userreporttable">
+        <tr>
+          <td><h6>Date:</h6></td>
+            <td>
+            {% if task_obj.complete_time == None %}
+                {{task_obj.close_task}}
+            {% else %}
+                {{task_obj.complete_time}}
+            {% endif %}
+            </td>
+      </tr>
+      </table>
+    </div>
+    <hr>
+    <div>
+      <table class="userreporttable">
+        <tr>
+          <td><h6> Invoice To: </h6></td>
+          <td class="invoiceend"><h6> Pay To: </h6></td>
+      </tr>
+      </table>
+    </div>
+
+    <div>
+      <table class="userreporttable">
+        <tr>
+          <td>{{booking_obj.name}}</td>
+          <td class="invoiceend">House Care Hub</td>
+      </tr>
+      </table>
+    </div>
+
+    <div>
+      <table class="userreporttable">
+        <tr>
+          <td>{{booking_obj.user_id.u_email}}</td>
+          <td class="invoiceend">Housecarehub24@gmail.com</td>
+      </tr>
+      </table>
+    </div>
+
+    <div>
+      <table class="userreporttable">
+        <tr>
+          <td>{{booking_obj.contactno}}</td>
+          <td class="invoiceend">8866131152</td>
+      </tr>
+      </table>
+    </div>
+
+    <div>
+      <table class="userreporttable">
+        <tr>
+          <td>
+            {{booking_obj.address}}
+          </td>
+          <td class="invoiceend">
+            210, Pushpank Complex Near Parthesvar Mahadev Temple, Isanpur, Vatva Road, Ahmedabad, 382443
+          </td>
+      </tr>
+      </table>
+    </div>
+
+  <hr>
+<div>
+      <div>
+        <h1 class="userreportpaymentdetail">Payment Details</h1>
+      </div>
+
+  <div>
+    <table class="userreportpayment">
+          <tr>
+            <td style="text-align: start;">{{payment_obj.service_id}}</td>
+            <td> {{payment_obj.amount}}</td>
+          </tr>
+          <tr>
+            <td style="text-align: start;">Tax</td>
+            <td>{{payment_obj.tax}}</td>
+          </tr>
+
+          <tr>
+            <td style="text-align: start;">Total Payment:</td>
+            <td>{{payment_obj.totalamount}} Rs</td>
+          </tr>
+
+    </table>
+
+</div>
+
+     <div style="margin-top: 10px;">
+        <table class="userreportpayment">
+              <tr>
+                <td style="text-align: start;"> Payment Mode</td>
+                <td style="text-align: start;">:Online</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+
+              <tr>
+                <td style="text-align: start;">Payment Id</td>
+                <td style="text-align: start;"> :{{payment_obj.id}}</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+
+              <tr>
+                <td style="text-align: start;">UPI ID</td>
+                <td style="text-align: start;">:{{payment_obj.upi_id}}</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+          </table>
+
+      </div>
+</div>
+
+<hr>
+
+
+{% if updated_sp %}
+    <div>
+      <div>
+        <h1 class="userreportpaymentdetail">Other Payment Details</h1>
+      </div>
+
+         <div>
+              <table class="userreportpayment">
+                <tr>
+                  <td style="text-align: start;"><h2> Name </h2></td>
+                  {% if catname == "Appliance" %}
+                    <td style="text-align: center;"><h2> Qty </h2></td>
+                  {% else %}
+                    <td style="text-align: center;"><h2> Sqf</h2></td>
+                  {% endif %}
+                  <td  style="text-align: center;"><h2> Amt </h2></td>
+                  <td><h2> Price </h2></td>
+                </tr>
+                {% for i in updated_sp %}
+                    <tr>
+                      <td style="text-align: start;">{{i.sparepart_id.sparepart_name}}</td>
+                      {% if catname == "Appliance" %}
+                        <td>{{i.quantity}}</td>
+                        <td>{{i.sparepart_id.sparepart_price}}</td>
+                        <td>{{i.sparepart_id.sparepart_price|get_sparepart_amount:i.square_feet}}</td>
+                      {% else %}
+                        <td>{{i.square_feet}}</td>
+                        <td>{{i.sparepart_id.sparepart_price}}</td>
+                        <td>{{i.sparepart_id.sparepart_price|get_sparepart_amount:i.square_feet}}</td>
+                      {% endif %}
+                {% endfor %}
+                    </tr>
+
+                  <tr>
+                      <td style="text-align: start;">Tax</td>
+                      <td></td>
+                      <td></td>
+                      <td>{{sp_payment.sparepart_tax}}</td>
+                  </tr>
+                  <tr>
+                      <td style="text-align: start;">Total</td>
+                      <td></td>
+                      <td></td>
+                      <td>{{sp_payment.sparepart_total_amount}} Rs</td>
+                  </tr>
+              </table>
+        </div>
+
+
+        <div style="margin-top: 10px;">
+            <table class="userreportpayment">
+                  <tr>
+                    <td style="text-align: start;">Payment Mode</td>
+                    <td style="text-align: start;">:Online</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td style="text-align: start;">Payment Id</td>
+                    <td style="text-align: start;">:{{sp_payment.id}}</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                  </tr>
+
+                  <tr>
+                    <td style="text-align: start;">UPI ID</td>
+                    <td style="text-align: start;">:{{sp_payment.upi_id}}</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                  </tr>
+
+              </table>
+
+          </div>
+
+    </div>
+{% endif %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  </body>
+</html>
+

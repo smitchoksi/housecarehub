@@ -1,0 +1,395 @@
+.removeliicon   /* In li list by default icon remove */
+{
+    list-style-type: none;
+}
+
+
+#featurecontent{    /* in index page */
+    margin-top: 70px;
+}
+
+.menuitemstyle{     /* design for menu */
+    border: 2px solid cornflowerblue;
+    box-shadow: -4px -4px 10px lightgray,4px 4px 10px lightgray;
+    border-radius: 10px;
+}
+
+.menuitemstyle:hover{    /* design for menu */
+    box-shadow: -2px -2px 6px dodgerblue,2px 2px 6px dodgerblue;
+}
+
+#AboutUs{       /* spacing for aboutus content */
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+.aboutusitemstyle{      /* color for about us items */
+    color: silver;
+}
+
+.aboutuslinkstyle{      /* color for about us links */
+    color:silver;
+}
+
+.aboutuslinkstyle:hover{    /* hover design for about us links */
+    color: white;
+}
+
+#menumainrow{
+    margin-top: 80px;
+    margin-bottom: 100px;
+}
+
+#menuheading{
+    margin-bottom: 40px;
+
+}
+
+#servicemenu{
+    border: 2px solid cornflowerblue;
+    overflow: hidden;
+    border-radius: 30px;
+}
+
+#serviceheading
+{
+    margin-top:50px;
+    margin-bottom:30px;
+}
+
+#paymentsummarybox{
+    margin-top: 45px;
+    margin-bottom: 25px;
+    border: 2px solid cornflowerblue;
+    border-radius: 10px;
+    box-shadow: -4px -4px 10px lightgray,4px 4px 10px lightgray;
+    background-color:lavender;
+}
+
+#paymentsummaryheading{
+    margin-top: 25px;
+    margin-bottom: 25px;
+}
+
+#paymentsummarycontent{
+    margin-bottom: 20px;
+}
+
+#bookingdetailsbox{
+    border: 2px solid cornflowerblue;
+    border-radius: 10px;
+    box-shadow: -4px -4px 10px lightgray,4px 4px 10px lightgray;
+    background-color:lavender;
+}
+
+#bookingdetailsheading{
+    margin-top: 20px;
+}
+
+#bookingdetailscontent{
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.selectdatestyle{
+    height: 80px;
+    width: 80px;
+    border: 1px solid;
+}
+
+
+#carddetailsbox{
+    border: 1px solid cornflowerblue;
+    border-radius: 10px;
+    margin-top: 50px;
+}
+
+#carddetailsheading{
+    margin-top: 20px;
+}
+
+#carddetailscontent{
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+
+#applyforjob_box{
+    border: 1px solid lightgray;
+    box-shadow: -4px -4px 10px lightgray,4px 4px 10px lightgray;
+    background-color: rgb(244, 241, 241);
+    border-radius: 10px;
+    margin-top: 100px;
+    margin-bottom:60px;
+}
+
+#applyforjob_heading{
+    margin-top: 30px;
+    margin-bottom: 20px;
+}
+
+#applyforjob_content{
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+#loginbox{
+    border: 1px solid lightgray;
+    box-shadow: -4px -4px 10px lightgray,4px 4px 10px lightgray;
+    border-radius: 10px;
+    background-color: lightblue;
+    margin-top: 100px;
+    margin-bottom: 60px;
+}
+
+#loginheading{
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+#logincontent{
+    margin-bottom: 20px;
+}
+
+#signupbox{
+    border: 1px solid lightgray;
+    box-shadow: -4px -4px 10px lightgray,4px 4px 10px lightgray;
+    border-radius: 10px;
+    background-color: lightblue;
+    /*border: 1px solid black;*/
+    margin-top: 100px;
+    margin-bottom: 60px;
+}
+
+@media only screen and (max-width: 768px) {
+    #signupbox{
+    margin-top: 25px;
+    margin-bottom: 16px;
+    }
+}
+
+#signupheading{
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+#signupcontent{
+    margin-bottom: 20px;
+}
+
+#uprofilepic{
+    border-radius: 50%;
+    padding: 10px;
+    border-radius: 50%;
+    border: 2px solid white;
+}
+
+#uprofilepicbox{
+    margin-top: 50px;
+    margin-bottom: 20px;
+
+}
+
+#username{
+    margin-top: 10px;
+    color: white;
+}
+
+#profiledetailsheading
+{
+    margin-top: 50px;
+    margin-bottom: 40px;
+}
+
+
+#MyBookingHeadingBox{
+    margin-top: 40px;
+    padding-top: 50px;
+    padding-bottom: 20px;
+    background-color:mediumpurple;
+    color:white;
+    border: 1px solid lightgray;
+}
+
+
+#MyBookingSubHeadingBox{
+    padding-top: 5px;
+    padding-bottom: 5px;
+    background-color:mediumpurple;
+    color:white;
+}
+
+#BookingListBox
+{
+    padding-top: 50px;
+    padding-bottom: 20px;
+    background-color:lightgray;
+}
+
+
+#Bookingitem{
+    box-shadow: -4px -4px 10px lightgray,4px 4px 10px lightgray;
+}
+
+#BookingLinks:active{
+    color: white;
+}
+
+#BookingLinks:hover{
+    color: white;
+}
+
+#BookingLinks{
+    text-decoration: none;
+    color: lightgrey;
+}
+
+@media only screen and (max-width: 286px) {
+    #BookingLinks{
+        font-size: 15px;
+    }
+}
+
+#BgColorLightGray{
+    background-color: lightgray;
+}
+
+#MyBookinDetailsPaymentsummarybox{
+    margin-top: 45px;
+    margin-bottom: 25px;
+    box-shadow: -4px -4px 10px lightgray,4px 4px 10px lightgray;
+    background-color:white;
+}
+
+
+#MyBookinDetailsbox{
+    box-shadow: -4px -4px 10px lightgray,4px 4px 10px lightgray;
+    background-color:white;
+}
+
+#sparepartssummarybox{
+    margin-top: 45px;
+    margin-bottom: 25px;
+
+    border-radius: 10px;
+
+    background-color:lavender;
+}
+
+#sparepartssummaryboxheading{
+    margin-top: 25px;
+    margin-bottom: 25px;
+}
+
+#sparepartssummaryboxcontent{
+    margin-bottom: 20px;
+}
+
+/* View More Description on service page css start */
+.Description-modal-body {
+	background:lightblue;
+	background-repeat: no-repeat;
+	color: #000;
+	overflow-x: hidden;
+
+}
+
+
+.Description-text {
+	border-radius: 5px;
+	background-color: #fff;
+	padding-left: 20px;
+	padding-right: 20px;
+	margin-top: 30px;
+	padding-top: 30px;
+
+}
+
+.Description-rating-box {
+	width: 100px;
+	height: 130px;
+	margin-right: auto;
+	margin-left: auto;
+	background-color: #FBC02D;
+	color: #fff;
+}
+
+.viewmoreservicedetailscard2{
+    border-radius: 5px;
+	background-color: #fff;
+	margin-top: 30px;
+
+}
+
+td {
+	padding-bottom: 10px;
+}
+
+.description-star-active {
+	color: #FBC02D;
+	margin-top: 10px;
+}
+
+.description-star-active:hover {
+	color: darkgoldenrod;
+	cursor: pointer;
+}
+
+.description-star-inactive {
+	color: #CFD8DC;
+	margin-top: 10px;
+}
+
+@media only screen and (max-width: 460px) {
+#viewmorecontent{
+    font-size: 10px;
+	}
+}
+
+@media only screen and (max-width: 325px) {
+    #viewmorecontent{
+        font-size: 9px;
+        font: bold;
+    }
+}
+
+.description-profile-pic {
+    width: 90px;
+    height: 90px;
+    border-radius: 100%;
+    margin-right: 30px;
+}
+
+.Description-blue-text {
+    color: #0091EA;
+}
+
+
+
+@media only screen and (max-width: 440px) {
+    .description-profile-pic {
+    width: 70px;
+    height: 70px;
+    border-radius: 100%;
+    margin-right: 30px;
+    }
+}
+
+
+@media only screen and (max-width: 380px) {
+    #nameuser{
+        padding-left: 25px;
+        font-size: 10px;
+
+    }
+}
+
+@media only screen and (max-width: 320px) {
+    #nameuser{
+        padding-left: 30px;
+        font-size: 10px;
+
+    }
+}
+/* View More Description on service page css END */
+

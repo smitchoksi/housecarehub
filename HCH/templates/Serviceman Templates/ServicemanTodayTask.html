@@ -1,0 +1,340 @@
+{% extends "Serviceman Templates/ServicemanBase.html" %}
+
+{% block content %}
+
+{% if messages %}
+    {% for msg in messages %}
+      {% if msg.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+        <script>
+          Swal.fire({
+          title: "Success!",
+          text: "{{msg}}",
+          icon: "success"
+          });
+        </script>
+      {% elif msg.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+        <script>
+          Swal.fire({
+          title: "Opps...",
+          text: "{{msg}}",
+          icon: "error"
+          });
+        </script>
+      {% endif %}
+    {% endfor %}
+{% endif %}
+
+<div class="container-fluid" id="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-sm-9 col-md-10"><!--For Adjustment-->
+
+                <div id="MyBookingHeadingBox" class="row">
+                    <div class="col"><h1 class="text-center">Today's Task</h1></div>
+                </div>
+                <div id="MyBookingSubHeadingBox"  class="row text-center justify-content-center">
+                    <div class="col pt-2 pb-2">
+                        <a id="BookingLinks" href="/allocated_task">Allocated</a>
+                    </div>
+                    <div class="col pt-2 pb-2">
+                        <a id="BookingLinks" href="/picked_task">Picked</a>
+                    </div>
+                    <div class="col pt-2 pb-2">
+                        <a id="BookingLinks" href="/completed_task">Completed</a>
+                    </div>
+                </div>
+
+                <div id="BookingListBox" class="row justify-content-center">
+                    {% if flag %}
+
+                    {% else %}
+                        <h4 class="mb-5 mt-2 text-center">Empty</h4>
+                    {% endif %}
+
+                    {% for i in tasks %}
+<!--                    <h1>{{i.complete_time}} == {{todaydate}}</h1>-->
+                            {% if i.complete_time == todaydate %}
+                                <div  class="col-10 mb-3">
+                                    <div class="card mb-3" data-aos="zoom-in" data-aos-duration="500">
+                                      <div id="Bookingitem" class="row g-0">
+                                        <div class="col-12 col-md-4 align-self-center p-2 ps-md-2 pe-md-2 p-lg-3 p-xl-5">
+                                            <img src="/media/{{ i.booking_id.service_id.simage }}" class="img-fluid rounded" alt="...">
+                                        </div>
+                                            <div class="col-md-8 col-12 mt-xl-3 mt-xxl-4">
+                                              <div class="card-body">
+                                                <h4 class="card-title mb-3">{{i.booking_id.service_id}}</h4>
+                                                <p><b>Allocated On:</b> {{i.assign_time}}</p>
+                                                {% if i.pick_time != None %}
+                                                    <p><b>Picked On:</b> {{i.pick_time}}</p>
+                                                {% endif %}
+                                                {% if i.status == "Completed" %}
+                                                    {% for j in tasks_copy %}
+                                                        {% if i.id == j.id %}
+                                                            <p><b>Complete On:</b> {{j.complete_time}}</p>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                {% elif i.status == "Closed" %}
+                                                    <p><b>Close On:</b> {{i.close_task}}</p>
+                                                {% else %}
+                                                    <p><b>Provide On:</b> {{i.booking_id.booking_provide_date}}, {{i.booking_id.booking_provide_time}}</p>
+                                                {% endif %}
+
+                                                {% if i.status == "Allocated" %}
+                                                    <a href="/accept_task/{{i.id}}"><p class="card-text me-2 btn btn-success mt-2">Accept Task</p></a>
+                                                {% elif i.start_time == None %}
+                                                    <a type="button" class="btn btn-primary me-2 mt-2" data-bs-toggle="modal" data-bs-target="#StartWorkOtpVerificationModal{{i.id}}"><p class="card-text">Start Work</p></a>
+                                                {% elif i.complete_time == None %}
+                                                    <a type="button" class="btn btn-success me-2 mt-2" data-bs-toggle="modal" data-bs-target="#CompleteWorkOtpVerificationModal{{i.id}}"><p class="card-text">Complete Work</p></a>
+                                                    {% if updatesp_button == False %}
+                                                        <a href="/updatespareparts_page/{{i.id}}" class="btn btn-success me-2 mt-2"><p class="card-text">Update Cost</p></a>
+                                                    {% endif %}
+                                                    <a type="button" class="btn btn-success me-2 mt-2" data-bs-toggle="modal" data-bs-target="#CloseTaskOtpVerificationModal{{i.id}}"><p class="card-text">Close Task</p></a>
+                                                {% endif %}
+                                                {% if i.status != "Completed" %}
+                                                    <a type="button" class="btn btn-success me-2 mt-2" data-bs-toggle="modal" data-bs-target="#ViewMoreModal{{i.id}}"><p class="card-text">View More</p></a>
+                                                {% endif %}
+                                              </div>
+                                            </div>
+                                      </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+<!--                         View More details modal -->
+                        <div class="modal fade" id="ViewMoreModal{{i.id}}" tabindex="-1" aria-labelledby="ViewMoreModalLabel{{i.id}}" aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h1 class="modal-title fs-5 " id="ViewMoreModalLabel{{i.id}}">Your Detalis</h1>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body bg-dark-subtle">
+                                  <div class="container-fluid mt-3">
+                                    <div class="row justify-content-center text-center  ">
+                                        <div class="col-12  col-lg-10" style="background-color: white;">
+                                            <div class="row justify-content-center " >
+                                                <div class="col-12  col-lg-10">
+                                                    <div class="row justify-content-center mb-4 mt-4 ">
+                                                        <div class="col-12">
+                                                            <h3>Booking Details</h3>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-5">
+                                                            <p class="text-start">Booking Id</p>
+                                                        </div>
+                                                        <div class="col-7">
+                                                            <p class="text-start">: {{i.booking_id.id}}</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row ">
+                                                        <div class="col-5">
+                                                            <p class="text-start">User Name</p>
+                                                        </div>
+                                                        <div class="col-7">
+                                                            <p class="text-start">: {{i.booking_id.user_id.u_fname}} {{i.booking_id.user_id.u_lname}}</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row ">
+                                                        <div class="col-5">
+                                                            <p class="text-start">Contact No</p>
+                                                        </div>
+                                                        <div class="col-7">
+                                                            <p class="text-start">: {{i.booking_id.contactno}}</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row ">
+                                                        <div class="col-5">
+                                                            <p class="text-start">Service Provide On</p>
+                                                        </div>
+                                                        <div class="col-7">
+                                                            <p class="text-start">: {{i.booking_id.booking_provide_date}} {{i.booking_id.booking_provide_time}}</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row "  >
+                                                        <div class="col-5">
+                                                            <p class="text-start">Address</p>
+                                                        </div>
+                                                        <div class="col-7">
+                                                            <p class="text-start">: {{i.booking_id.address}}</p>
+                                                        </div>
+                                                    </div>
+
+                                                    {% if updatesp_button == True %}
+                                                        <div class="row "  >
+                                                            <div class="col-5">
+                                                                <p class="text-start">Updated Payment Status</p>
+                                                            </div>
+                                                            <div class="col-7">
+                                                                    <p class="text-start">: <i class="bi bi-check-circle-fill text-success"></i></p>
+                                                            </div>
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="modal-footer bg-dark-subtle">
+                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        <!--Start Work Otp Verification Modal -->
+                        <div class="modal fade" id="StartWorkOtpVerificationModal{{i.id}}" tabindex="-1" aria-labelledby="StartWorkOtpVerificationModalLabel{{i.id}}" aria-hidden="true">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="StartWorkOtpVerificationModalLabel{{i.id}}">OTP Verification</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                              </div>
+                              <div class="modal-body container-fluid bg-dark-subtle">
+                                  <form action="/startwork_verify_otp" method="post">
+                                      {% csrf_token %}
+                                        <div class="row justify-content-center mt-4">
+                                            <div class="col-10">
+                                                <div class="form-floating mb-3">
+                                                    <input type="text" class="form-control" name="task_id" value="{{i.id}}" hidden>
+                                                  <input type="email" class="form-control" name="uemail" value="{{i.booking_id.user_id}}" readonly>
+                                                  <label for="floatingInput">User Email:</label>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-10">
+                                                <div class="form-floating mb-3">
+                                                  <input type="tel" pattern="[0-9]{6}" class="form-control" required name="otp" id="floatingInput" placeholder="name@example.com">
+                                                  <label for="floatingInput">Enter OTP:</label>
+                                                </div>
+                                            </div>
+        <!--                                    <h2>{{i.id}}</h2>-->
+                                            <div class="col-10 mb-3">
+                                                <a href="/generate_otp/{{i.id}}" type="button" class="btn btn-success">Genrate OTP</a>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="submit" class="btn btn-primary">Proceed</button>
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- Complete Work Otp Verification Modal -->
+                        <div class="modal fade" id="CompleteWorkOtpVerificationModal{{i.id}}" tabindex="-1" aria-labelledby="CompleteWorkOtpVerificationModalLabel{{i.id}}" aria-hidden="true">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="CompleteWorkOtpVerificationModalLabel{{i.id}}">OTP Verification</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                              </div>
+                              <div class="modal-body container-fluid bg-dark-subtle">
+                                  <form action="/completework_verify_otp" method="post">
+                                      {% csrf_token %}
+                                        <div class="row justify-content-center mt-4">
+                                            <div class="col-10">
+                                                <div class="form-floating mb-3">
+                                                    <input type="text" class="form-control" name="task_id" value="{{i.id}}" hidden>
+                                                  <input type="email" class="form-control" name="uemail" value="{{i.booking_id.user_id}}" readonly>
+                                                  <label for="floatingInput">User Email:</label>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-10">
+                                                <div class="form-floating mb-3">
+                                                  <input type="tel" pattern="[0-9]{6}" class="form-control" required name="otp" id="floatingInput" placeholder="name@example.com">
+                                                  <label for="floatingInput">Enter OTP:</label>
+                                                </div>
+                                            </div>
+        <!--                                    <h2>{{i.id}}</h2>-->
+                                            <div class="col-10 mb-3">
+                                                <a href="generate_otp/{{i.id}}" type="button" class="btn btn-success">Genrate OTP</a>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="submit" class="btn btn-primary">Proceed</button>
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                    <!-- Close Task Otp Verification Modal -->
+                        <div class="modal fade" id="CloseTaskOtpVerificationModal{{i.id}}" tabindex="-1" aria-labelledby="CloseTaskOtpVerificationModalLabel{{i.id}}" aria-hidden="true">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="CloseTaskOtpVerificationModalLabel{{i.id}}">OTP Verification</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                              </div>
+                              <div class="modal-body container-fluid bg-dark-subtle">
+                                  <form action="/closetask_verify_otp" method="post">
+                                      {% csrf_token %}
+                                        <div class="row justify-content-center mt-4">
+                                            <div class="col-10">
+                                                <div class="form-floating mb-3">
+                                                    <input type="text" class="form-control" name="task_id" value="{{i.id}}" hidden>
+                                                  <input type="email" class="form-control" name="uemail" value="{{i.booking_id.user_id}}" readonly>
+                                                  <label for="floatingInput">User Email:</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-10">
+                                                <div class="form-floating mb-3">
+                                                  <input type="tel" pattern="[0-9]{6}" required class="form-control" name="otp" id="floatingInput" placeholder="name@example.com">
+                                                  <label for="floatingInput">Enter OTP:</label>
+                                                </div>
+                                            </div>
+        <!--                                    <h2>{{i.id}}</h2>-->
+                                            <div class="col-10 mb-3">
+                                                <a href="generate_otp_for_closetask/{{i.id}}" type="button" class="btn btn-success">Genrate OTP</a>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="submit" class="btn btn-primary">Proceed</button>
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                    {% endfor %}
+
+                    {% for i in close_tasks %}
+<!--                    <h1>{{i.complete_time}} == {{todaydate}}</h1>-->
+                            {% if i.close_task == todaydate %}
+                                <div  class="col-10 mb-3">
+                                    <div class="card mb-3">
+                                      <div id="Bookingitem" class="row g-0">
+                                        <div class="col-12 col-md-4 align-self-center p-2 ps-md-2 pe-md-2 p-lg-3 p-xl-5">
+                                            <img src="/media/{{ i.booking_id.service_id.simage }}" class="img-fluid rounded" alt="...">
+                                        </div>
+                                            <div class="col-md-8 col-12 mt-xl-3 mt-xxl-4">
+                                              <div class="card-body">
+                                                <h4 class="card-title mb-3">{{i.booking_id.service_id}}</h4>
+                                                    <p><b>Allocated On:</b> {{i.assign_time}}</p>
+                                                    <p><b>Picked On:</b> {{i.pick_time}}</p>
+                                                    {% for j in close_tasks_copy %}
+                                                        {% if i.id == j.id %}
+                                                            <p><b>Close On:</b> {{j.close_task}}</p>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                              </div>
+                                            </div>
+                                      </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

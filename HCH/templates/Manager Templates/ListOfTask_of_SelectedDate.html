@@ -1,0 +1,458 @@
+{% extends "Manager Templates/ManagerBase.html" %}
+
+{% block content %}
+{% load get_sp_amount %}
+{% if messages %}
+    {% for msg in messages %}
+      {% if msg.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+        <script>
+          Swal.fire({
+          title: "Success!",
+          text: "{{msg}}",
+          icon: "success"
+          });
+        </script>
+      {% elif msg.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+        <script>
+          Swal.fire({
+          title: "Opps...",
+          text: "{{msg}}",
+          icon: "error"
+          });
+        </script>
+      {% endif %}
+    {% endfor %}
+{% endif %}
+<!--<h1>Date = {{date}}</h1>-->
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-12 col-sm-9 col-md-10"><!--For Adjustment-->
+
+                <div id="TaskHeadingBox" class="row">
+                    <div class="col-12">
+                        <h1 class="text-center"><a class="text-white" href="/listof_alltask_bydate/{{date}}{{temp}}">List Of Task</a> <a class="text-white" data-bs-toggle="modal" data-bs-target="#TaskFilterModal"><i class="bi bi-filter"></i></a></h1>
+                    </div>
+                </div>
+                <div id="TaskSubHeadingBox"  class="row text-center justify-content-center">
+                    <div class="col pt-2 pb-2">
+                        <a class="TaskLinks" href="/listof_pendingtask_bydate/{{date}}{{temp}}">Pending</a><!-- Pending -->
+                    </div>
+                    <div class="col pt-2 pb-2">
+                        <a class="TaskLinks" href="/listof_allocatedtask_bydate/{{date}}{{temp}}">Allocated</a><!-- Pending -->
+                    </div>
+                    <div class="col pt-2 pb-2">
+                        <a class="TaskLinks" href="/listof_pickedtask_bydate/{{date}}{{temp}}">Picked</a><!-- Pending -->
+                    </div>
+                    <div class="col pt-2 pb-2">
+                        <a class="TaskLinks" href="/listof_completedtask_bydate/{{date}}{{temp}}">Completed</a><!-- Pending -->
+                    </div>
+                    <div class="col pt-2 pb-2">
+                        <a class="TaskLinks" href="/listof_cancelledtask_bydate/{{date}}{{temp}}">Cancelled</a><!-- Pending -->
+                    </div>
+                    <div class="col pt-2 pb-2">
+                        <a class="TaskLinks" href="/listof_closedtask_bydate/{{date}}{{temp}}">Closed</a><!-- Pending -->
+                    </div>
+                </div>
+                <div id="BookingListBox" class="row justify-content-center border">
+                    {% if task %}
+
+                          {% for i in task %}
+
+                            {% if timeslot == "All" %}
+
+                                {% if date == i.booking_id.booking_provide_date %}
+                                    <div class="col-10">
+                                        <div class="card mb-3" data-aos="zoom-in" data-aos-duration="500">
+                                          <div class="row g-0">
+                                            <div class="col-12 col-md-4 align-self-center p-2 ps-md-2 pe-md-2 p-lg-3 p-xl-5">
+                                              <img src="/media/{{ i.booking_id.service_id.simage }}" class="img-fluid border rounded" alt="...">
+                                            </div>
+                                                <div class="col-md-8 col-12">
+                                                  <div class="card-body">
+                                                        <h4 class="card-title mb-3">{{i.booking_id.service_id}}</h4>
+                                                        <p><b>User: </b>{{i.booking_id.user_id}}</p>
+                                                        <p><b>Address: </b>{{i.booking_id.address}},{{i.booking_id.area}}</p>
+                                                        {% if i.status == "Allocated" or i.status == "Picked" %}
+                                                            <p><b>Allocated Serviceman: </b> <a href="/view_serviceman_profile/{{i.serviceman_id.id}}">{{i.serviceman_id}}</a></p>
+                                                            <p><b>Provide Date & Time: {{i.booking_id.booking_provide_date}}, {{i.booking_id.booking_provide_time}}</b></p>
+                                                        {% elif i.status == "Completed" %}
+                                                            <p><b>Allocated Serviceman: </b> <a href="/view_serviceman_profile/{{i.serviceman_id.id}}">{{i.serviceman_id.sm_name}}</a></p>
+                                                            <p><b>Completed On:</b> {{i.complete_time}}</p>
+                                                        {% elif i.status == "Closed" %}
+                                                            <p><b>Allocated Serviceman: </b><a href="/view_serviceman_profile/{{i.serviceman_id.id}}">{{i.serviceman_id}}</a></p>
+                                                            <p><b>Closed On:</b> {{i.close_task}}</p>
+                                                        {% endif %}
+
+                                                        {% if i.status == "Pending" %}
+                                                            <a href="/fetch_serviceman_list_to_assigntask/{{i.booking_id.service_id.scatname.id}}{{i.id}}" class="btn btn-success mt-2">Assign Task To Serviceman</a>
+                                                        {% elif i.status == "Allocated" or i.status == "Picked" %}
+                                                            <a href="/retrieve_task/{{i.id}}" class="btn btn-danger mt-2">Retreive Task</a>
+                                                        {% endif %}
+                                                        <a type="button" class="btn btn-primary mt-2" data-bs-toggle="modal" data-bs-target="#CheckStatusModal{{i.id}}">Check Status</a>
+                                                        <a type="button" class="btn btn-primary mt-2" data-bs-toggle="modal" data-bs-target="#ViewMoreModal{{i.id}}">View More</a>
+                                                  </div>
+                                                </div>
+                                          </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% else %}
+                                {% if date == i.booking_id.booking_provide_date %}
+                                    {% if timeslot == i.booking_id.booking_provide_time %}
+                                        <div class="col-10">
+                                            <div class="card mb-3" data-aos="zoom-in" data-aos-duration="500">
+                                              <div class="row g-0">
+                                                <div class="col-12 col-md-4 align-self-center p-2 ps-md-2 pe-md-2 p-lg-3 p-xl-5">
+                                                  <img src="/media/{{ i.booking_id.service_id.simage }}" class="img-fluid border rounded" alt="...">
+                                                </div>
+                                                    <div class="col-md-8 col-12">
+                                                      <div class="card-body">
+                                                        <h4 class="card-title mb-3">{{i.booking_id.service_id}}</h4>
+                                                        <p><b>User: </b>{{i.booking_id.user_id}}</p>
+                                                        <p><b>Address: </b>{{i.booking_id.address}},{{i.booking_id.area}}</p>
+                                                        {% if i.status == "Allocated" or i.status == "Picked" %}
+                                                            <p><b>Allocated Serviceman: </b><a href="/view_serviceman_profile/{{i.serviceman_id.id}}">{{i.serviceman_id}}</a></p>
+                                                            <p><b>Provide Date & Time: {{i.booking_id.booking_provide_date}}, {{i.booking_id.booking_provide_time}}</b></p>
+                                                        {% elif i.status == "Completed" %}
+                                                            <p><b>Allocated Serviceman: </b><a href="/view_serviceman_profile/{{i.serviceman_id.id}}">{{i.serviceman_id}}</a></p>
+                                                            <p><b>Completed On:</b> {{i.complete_time}}</p>
+                                                        {% elif i.status == "Closed" %}
+                                                            <p><b>Allocated Serviceman: </b><a href="/view_serviceman_profile/{{i.serviceman_id.id}}">{{i.serviceman_id}}</a></p>
+                                                            <p><b>Closed On:</b> {{i.close_task}}</p>
+                                                        {% endif %}
+
+                                                        {% if i.status == "Pending" %}
+                                                            <a href="/fetch_serviceman_list_to_assigntask/{{i.booking_id.service_id.scatname.id}}{{i.id}}" class="btn btn-success mt-2">Assign Task To Serviceman</a>
+                                                        {% elif i.status == "Allocated" or i.status == "Picked" %}
+                                                            <a href="/retrieve_task/{{i.id}}" class="btn btn-danger mt-2">Retrieve Task</a>
+                                                        {% endif %}
+                                                        <a type="button" class="btn btn-primary mt-2" data-bs-toggle="modal" data-bs-target="#CheckStatusModal{{i.id}}">Check Status</a>
+                                                        <a type="button" class="btn btn-primary mt-2" data-bs-toggle="modal" data-bs-target="#ViewMoreModal{{i.id}}">View More</a>
+                                                      </div>
+                                                    </div>
+                                              </div>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endif %}
+                            {% endif %}
+
+                            <!-- View More Details Modal -->
+                            <div class="modal fade" id="ViewMoreModal{{i.id}}" tabindex="-1" aria-labelledby="ViewMoreModalLabel{{i.id}}" aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h1 class="modal-title fs-5 " id="ViewMoreModalLabel{{i.id}}">More Detalis</h1>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body bg-dark-subtle">
+                                  <div class="container-fluid mt-3">
+                                    <div class="row justify-content-center text-center  ">
+                                        <div class="col-12  col-lg-10" style="background-color: white;">
+                                            <div class="row justify-content-center " >
+                                                <div class="col-12  col-lg-10">
+                                                    <div class="row justify-content-center mb-4 mt-4 ">
+                                                        <div class="col-12">
+                                                            <h3>Booking Details</h3>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-5">
+                                                            <p class="text-start">Booking Id</p>
+                                                        </div>
+                                                        <div class="col-7">
+                                                            <p class="text-start">: {{i.booking_id.id}}</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row ">
+                                                        <div class="col-5">
+                                                            <p class="text-start">User Name</p>
+                                                        </div>
+                                                        <div class="col-7">
+                                                            <p class="text-start">: {{i.booking_id.user_id.u_fname}} {{i.booking_id.user_id.u_lname}}</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row ">
+                                                        <div class="col-5">
+                                                            <p class="text-start">Contact No</p>
+                                                        </div>
+                                                        <div class="col-7">
+                                                            <p class="text-start">: {{i.booking_id.contactno}}</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row ">
+                                                        <div class="col-5">
+                                                            <p class="text-start">Service Provide On</p>
+                                                        </div>
+                                                        <div class="col-7">
+                                                            <p class="text-start">: {{i.booking_id.booking_provide_date}} {{i.booking_id.booking_provide_time}}</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row "  >
+                                                        <div class="col-5">
+                                                            <p class="text-start">Address</p>
+                                                        </div>
+                                                        <div class="col-7">
+                                                            <p class="text-start">: {{i.booking_id.address}}</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row "  >
+                                                        <div class="col-5">
+                                                            <p class="text-start">Area</p>
+                                                        </div>
+                                                        <div class="col-7">
+                                                            <p class="text-start">: {{i.booking_id.area}}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                        {% for j in service_payments %}
+                                          {% if i.booking_id == j.booking_id %}
+                                            <div class="modal-body bg-dark-subtle">
+                                                <div class="container-fluid">
+                                                  <div class="row justify-content-center text-center">
+                                                      <div class="col-12  col-lg-10" style="background-color: white;">
+
+                                                          <div class="row justify-content-center mt-3 ps-2 pe-2" >
+                                                              <div class="col-12  col-lg-10">
+                                                                      <div class="row justify-content-center mb-4 mt-4 ">
+                                                                          <div class="col-12">
+                                                                              <h3>Payment Details</h3>
+                                                                          </div>
+                                                                      </div>
+
+                                                                      <div class="row justify-content-center" >
+                                                                          <div class="col-7">
+                                                                              <p class="text-start">{{j.service_id.sname}}</p>
+                                                                          </div>
+                                                                          <div class="col-5">
+                                                                              <p class=""><i class="bi bi-currency-rupee">{{j.service_id.sprice}}</i></p>
+                                                                          </div>
+                                                                      </div>
+                                                                      <div class="row fw-medium justify-content-center">
+                                                                          <div class="col-7">
+                                                                              <p class="text-start">Tax</p>
+                                                                          </div>
+                                                                          <div class="col-5">
+                                                                              <p class=""><i class="bi bi-currency-rupee">{{j.tax}}</i></p>
+                                                                          </div>
+                                                                      </div>
+
+                                                                      <div class="row fw-medium justify-content-center mb-3" >
+                                                                          <div class="col-7" style="border-top: 2px solid black;">
+                                                                              <p class="text-start">Total Payment</p>
+                                                                          </div>
+                                                                          <div class="col-5 mb-4" style="border-top: 2px solid black;">
+                                                                              <p class=""><i class="bi bi-currency-rupee">{{j.totalamount}}</i></p>
+                                                                          </div>
+                                                                      </div>
+                                                              </div>
+                                                          </div>
+                                                      </div>
+                                                  </div>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                      {% endfor %}
+                                      {% for j in sparepart_payments %}
+                                        {% if i.id == j.task_id.id %}
+                                            <div class="modal-body bg-dark-subtle">
+                                                <div class="container-fluid">
+                                                  <div class="row justify-content-center">
+                                                      <div class="col-12  col-lg-10" style="background-color: white;">
+
+                                                          <div class="row justify-content-center mt-3 ps-2 pe-2" >
+                                                              <div class="col-12  col-lg-10">
+                                                                      <div class="row justify-content-center mb-4 mt-4 ">
+                                                                          <div class="col-12">
+                                                                              <h3 class="text-center">Other Payment Details</h3>
+                                                                          </div>
+
+                                                                      </div>
+                                                                      <div class="row">
+                                                                          <div class="col-4"><h6>Name</h6></div>
+                                                                            <div class="col-3"><h6>Price</h6></div>
+                                                                            {% if i.booking_id.service_id.scatname.catname == "Appliance" %}
+                                                                              <div class="col-2"><h6>Qty</h6></div>
+                                                                            {% else %}
+                                                                              <div class="col-2"><h6>Sqf</h6></div>
+                                                                            {% endif %}
+                                                                          <div class="col-3"><h6>Amt</h6></div>
+                                                                      </div>
+                                                                  {% for usp in updated_spareparts %}
+                                                                    {% if i.id == usp.task_id.id %}
+                                                                         <div class="row">
+                                                                            <div class="col-4 text-start">
+                                                                              <p>{{usp.sparepart_id.sparepart_name}}</p>
+                                                                            </div>
+                                                                            <div class="col-3"><i class="bi bi-currency-rupee"></i>{{usp.sparepart_id.sparepart_price}}</div>
+                                                                            {% if i.booking_id.service_id.scatname.catname == "Appliance" %}
+                                                                              <div class="col-2">{{usp.quantity}}</div>
+                                                                              <div class="col-3 text-start"><i class="bi bi-currency-rupee"></i>{{usp.sparepart_id.sparepart_price|get_sparepart_amount:usp.quantity}}</div>
+                                                                            {% else %}
+                                                                              <div class="col-2">{{usp.square_feet}}</div>
+                                                                              <div class="col-3 text-start"><i class="bi bi-currency-rupee"></i>{{usp.sparepart_id.sparepart_price|get_sparepart_amount:usp.square_feet}}</div>
+                                                                            {% endif %}
+                                                                         </div>
+                                                                    {% endif %}
+                                                                  {% endfor %}
+                                                                      <div class="row fw-medium justify-content-center">
+                                                                          <div class="col">
+                                                                              <p class="text-start">Tax</p>
+                                                                          </div>
+                                                                          <div class="col-3 text-start">
+                                                                              <p class=""><i class="bi bi-currency-rupee">{{j.sparepart_tax}}</i></p>
+                                                                          </div>
+                                                                      </div>
+
+                                                                      <div class="row fw-medium justify-content-center mb-3" >
+                                                                          <div class="col" style="border-top: 2px solid black;">
+                                                                              <p class="text-start">Total Payment</p>
+                                                                          </div>
+                                                                          <div class="col-3 text-start" style="border-top: 2px solid black;">
+                                                                              <p class=""><i class="bi bi-currency-rupee">{{j.sparepart_total_amount}}</i></p>
+                                                                          </div>
+                                                                      </div>
+                                                              </div>
+                                                          </div>
+                                                      </div>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                    {% endif %}
+                                  {% endfor %}
+                                <div class="modal-footer bg-dark-subtle">
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                            <!-- Check Status model Start -->
+                            <div class="modal fade" id="CheckStatusModal{{i.id}}" tabindex="-1" aria-labelledby="CheckStatusModalLabel" aria-hidden="true">
+                              <div class="modal-dialog">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="CheckStatusModalLabel">Booking Status</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                  </div>
+                                  <div class="modal-body container-fluid bg-secondary-subtle">
+                                    <div class="row ms-3">
+                                        <div class="col-6 fw-semibold">
+                                            <p>Task Id</p>
+                                        </div>
+                                        <div class="col-6 fw-semibold">
+                                            <p>: {{i.id}}</p>
+                                        </div>
+                                        <div class="col-6 fw-semibold">
+                                            <p>Task Status</p>
+                                        </div>
+                                        <div class="col-6 fw-semibold">
+                                            <p>: {{i.status}}</p>
+                                        </div>
+                                        <div class="col-6 fw-semibold">
+                                            <p>Booking on</p>
+                                        </div>
+                                        <div class="col-6">
+                                            <p>: {{i.booking_id.booking_date_time}}</p>
+                                        </div>
+                                        <div class="col-6 fw-semibold">
+                                            <p>Service Provide Time</p>
+                                        </div>
+                                        <div class="col-6">
+                                            <p>: {{i.booking_id.booking_provide_date}}, {{i.booking_id.booking_provide_time}}</p>
+                                        </div>
+                                        {% if i.serviceman_id != None %}
+                                            <div class="col-6 fw-semibold">
+                                            <p>Allocated Serviceman</p>
+                                            </div>
+                                            <div class="col-6 fw-semibold">
+                                                <p>: {{i.serviceman_id}}</p>
+                                            </div>
+                                        {% endif %}
+                                        <div class="col-6 fw-semibold">
+                                            <p>Assign On</p>
+                                        </div>
+                                        <div class="col-6">
+                                            <p>: {{i.assign_time}}</p>
+                                        </div>
+                                        <div class="col-6 fw-semibold">
+                                            <p>Picked On</p>
+                                        </div>
+                                        <div class="col-6 ">
+                                            <p>: {{i.pick_time}}</p>
+                                        </div>
+                                        <div class="col-6 fw-semibold">
+                                            <p>Work Start On</p>
+                                        </div>
+                                        <div class="col-6">
+                                            <p>: {{i.start_time}}</p>
+                                        </div>
+                                        <div class="col-6 fw-semibold">
+                                            <p>Work Completed On</p>
+                                        </div>
+                                        <div class="col-6">
+                                            <p>: {{i.complete_time}}</p>
+                                        </div>
+                                        {% if i.close_task != None %}
+                                            <div class="col-6 fw-semibold">
+                                                <p>Close On</p>
+                                            </div>
+                                            <div class="col-6">
+                                                <p>: {{i.close_task}}</p>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                    <!-- Check Status model End -->
+                          {% endfor %}
+                          <!-- Loop For Closed Task -->
+                    {% else %}
+                        <h4 class="mb-5 mt-2 text-center">Empty</h4>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!-- Modal -->
+<div class="modal fade" id="TaskFilterModal" tabindex="-1" aria-labelledby="TaskFilterModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title text-center fs-5" id="TaskFilterModalLabel">Filter</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="/tasks_of_selected_date" method="post">
+          {% csrf_token %}
+          <div class="modal-body row text-center">
+              <div class="col-6">
+                <input type="date" name="date" required>
+              </div>
+              <div class="col-6">
+                  <select class="form-select" name="timeslot" aria-label="Default select example" required>
+                            <option value="">Select Time</option>
+                            <option selected value="0">All</option>
+                            <option value="1">10:00 AM</option>
+                            <option value="2">1:00 PM</option>
+                            <option value="3">4:00 PM</option>
+                  </select>
+              </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Proceed</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>House Care Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+    <link rel="stylesheet" type="text/css" href="static/css/style.css">
+    <link rel="stylesheet" type="text/css" href="static/css/ErrorBox.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="static/javascript/hch.js"></script>
+    {% if error %}
+        <style>
+            #container{
+            opacity: 0.1;
+            }
+        </style>
+    {% endif %}
+</head>
+
+<body>
+
+{% if messages %}
+    {% for msg in messages %}
+      {% if msg.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+        <script>
+          Swal.fire({
+          title: "Success!",
+          text: "{{msg}}",
+          icon: "success"
+          });
+        </script>
+      {% elif msg.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+        <script>
+          Swal.fire({
+          title: "Opps...",
+          text: "{{msg}}",
+          icon: "error"
+          });
+        </script>
+      {% endif %}
+    {% endfor %}
+{% endif %}
+
+<nav class="navbar navbar-expand-lg rounded-4 bg-primary-subtle mt-1">
+    <div class="container-fluid">
+        <h3>House Care Hub</h3>
+        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
+                aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Menu</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+                <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                    <li class="nav-item pt-2 pt-lg-0 pe-3">
+                        <a class="nav-link" aria-current="page" href="/"><b>Home</b></a>
+                    </li>
+<!--                    <li class="nav-item pt-2 pt-lg-0  pe-3">-->
+<!--                        <a class="nav-link" href="#"><b>Profile</b></a>-->
+<!--                    </li>-->
+                    <li class="nav-item pt-2 pt-lg-0 pe-3">
+                        <a class="nav-link" type="button" data-bs-toggle="modal" data-bs-target="#ChangePassword"><b>Change
+                            Password</b></a>
+                    </li>
+                    <li class="nav-item pt-2 pt-lg-0 pe-3">
+                        <a class="nav-link" href="/mybookings/On Going"><b>My Bookings</b></a>
+                    </li>
+                    <li class="nav-item pt-2 pt-lg-0 pe-3">
+                        <a class="nav-link" data-bs-toggle="modal" type="button" data-bs-target="#exampleModal"><b>Logout</b></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Button trigger modal -->
+
+<!-- Logout Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Are You Sure?</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-footer">
+                <a type="button" href="/user_logout" class="btn btn-primary me-2">Logout</a>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Change Image Modal -->
+<div class="modal fade" id="ChangeImage" tabindex="-1" aria-labelledby="ChangeImageModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content ">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="ChangeImageModalLabel">Change Your Profile Photo?</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+
+                    <form action="/update_uprofilepic" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <label for="formFile" class="form-label">Select Your Profile Image</label>
+                        <input type="file" class="form-control" required name="uprofilepic"  accept="image/*" id="formFile">
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Change ChangePassword Modal -->
+<div class="modal fade" id="ChangePassword" tabindex="-1" aria-labelledby="ChangePasswordModalLabel" aria-hidden="true"
+     style="display:none;">
+    <div class="modal-dialog">
+        <div class="modal-content bg-secondary-subtle">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="ChangePasswordModalLabel">Change Your Password ?</h1>
+                <button type="button" onclick="valuenull('ChangePasswordForm')" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body mt-4 row justify-content-center">
+                <div class="col-9">
+                    <form id="ChangePasswordForm" action="/changepassword" method="post">
+                        {% csrf_token %}
+                        <div class="form-floating mb-4">
+                            <input type="password" name="oldpassword" value="{{oldpassword}}" class="form-control" id="OldPassword" required
+                                    placeholder="Password">
+                            <label for="OldPassword">Enter Old Password</label>
+                        </div>
+                        <div class="form-floating mb-4">
+                            <input type="password" class="form-control" id="NewPassword" required name="newpassword" value="{{newpassword}}"
+                                   placeholder="Password">
+                            <label for="NewPassword">Enter New Password</label>
+                        </div>
+                        <div class="form-floating mb-4">
+                            <input type="password" class="form-control" id="ReEnterPassword" required name="reenternewpassword" value="{{reenternewpassword}}"
+                                    placeholder="Password">
+                            <label for="ReEnterPassword">Re-enter New Password</label>
+                        </div>
+                        <div class="form-floating mb-4">
+                            <a href="/forgetpassword_page">Forget Password?</a>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" onclick="valuenull('ChangePasswordForm')" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid" id="container">
+    <div class="row">
+        <div class="col">  <!-- For main Adjustment -->
+            <div class="row mt-3 m-0 m-sm-5 justify-content-center">
+                <div class="col-12 col-lg-4 bg-dark">  <!-- For box1 Adjustment -->
+
+                    <div class="row justify-content-center text-center">
+                        <div id="uprofilepicbox" class="col-8 col-md-3 col-lg-6 pt-4 pt-sm-0" data-aos="flip-right" data-aos-duration="1000">
+                            <a type="button" data-bs-toggle="modal" data-bs-target="#ChangeImage"><img id="uprofilepic" name="uprofilepic"
+                                                                                                       class="img-fluid"
+                                                                                                       src="media/{{user.u_profilepic}}" style="height:200px; width:200px;"></a>
+                        </div>
+                    </div>
+
+                    <div class="row justify-content-center">
+                        <div id="username" class="col-12"><h3 class="text-center">Hello! {{user.u_fname}} {{user.u_lname}}</h3>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-12 col-lg-8">
+                    <div class="row">
+                        <div class="col mt-2 mt-lg-0 ms-0 ms-lg-2 bg-dark-subtle">   <!--For box2 Adjustment-->
+
+                            <form action="/updateuserprofiledata" method="post">
+                                {% csrf_token %}
+                                <div class="row justify-content-center">
+                                    <div id="profiledetailsheading" class="col-12">
+                                        <h2 class="text-center">Profile Details</h2>
+                                    </div>
+                                    {% if dataerror %}
+                                        <div class="col-11 col-md-8 col-lg-10 col-xl-8">
+                                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                <strong>ERROR!</strong> {{ dataerror }}
+                                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                    <div class="col-11 col-md-8 col-lg-10 col-xl-8">
+                                        <div class="row">
+                                            <div class="col-12 col-sm-6">
+                                                <div class="form-floating mb-4">
+                                                    <input type="text" name="f_name" value="{{user.u_fname}}"
+                                                           class="form-control" required placeholder="name@example.com">
+                                                    <label for="floatingInput">First Name</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-sm-6">
+                                                <div class="form-floating mb-4">
+                                                    <input type="text" name="l_name" value="{{user.u_lname}}"
+                                                           class="form-control" required placeholder="name@example.com">
+                                                    <label for="floatingInput">Last Name</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-11 col-md-8 col-lg-10 col-xl-8">
+                                        <div class="form-floating mb-4">
+                                            <input type="email" name="email" id="email" value="{{user.u_email}}" class="form-control"
+                                                   required placeholder="name@example.com"
+                                                   oninput="
+                                                            const email = this.value.trim();
+                                                            const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+                                                            if (!isValidEmail) {
+                                                                this.setCustomValidity('Please enter a valid email address');
+                                                                this.reportValidity();
+                                                            } else {
+                                                                this.setCustomValidity('');
+                                                                this.reportValidity();
+                                                            }"
+                                            />
+                                            <label for="email">Email</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-11 col-md-8 col-lg-10 col-xl-8">
+                                        <div class="row">
+                                            <div class="col-12 col-sm-6">
+                                                <div class="form-floating mb-4">
+                                                    <input type="tel" pattern="[0-9]{10}" name="contactno"
+                                                           value="{{user.u_phoneno}}" class="form-control" placeholder=""
+                                                           required>
+                                                    <label for="floatingInput">Contact No</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-sm-6">
+                                                <div class="form-floating mb-4">
+                                                    <input type="text" name="gender" value="{{user.u_gender}}"
+                                                           class="form-control" required placeholder="name@example.com">
+                                                    <label for="floatingInput">Gender</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-11 col-md-8 col-lg-10 col-xl-8">
+                                        <div class="form-floating mb-3">
+                                            <textarea class="form-control" name="address" placeholder=""
+                                                      id="floatingTextarea2" required
+                                                      style="height: 100px">{{user.u_address}}</textarea>
+                                            <label for="floatingTextarea2">Address</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-11 col-md-8 col-lg-10 col-xl-8">
+                                        <div class="row">
+                                            <div class="col-12 col-sm-6">
+                                                <div class="form-floating mb-4">
+                                                    <input type="text" name="area" list="listofarea" value="{{user.u_area}}" class="form-control"
+                                                           id="floatingInput" required placeholder="name@example.com">
+                                                    <label for="floatingInput">Area</label>
+                                                    <datalist id="listofarea">
+                                                      <option selected>None</option>
+                                                      <option value="Alam Roza">Alam Roza</option>
+                                                      <option value="Ambawadi">Ambawadi</option>
+                                                      <option value="Amraiwadi">Amraiwadi</option>
+                                                      <option value="Asarwa">Asarwa</option>
+                                                      <option value="Badarkha">Badarkha</option>
+                                                      <option value="Bahiyal">Bahiyal</option>
+                                                      <option value="Bapunagar">Bapunagar</option>
+                                                      <option value="Behrampura">Behrampura</option>
+                                                      <option value="Bodakdev">Bodakdev</option>
+                                                      <option value="Maninagar">Maninagar</option>
+                                                      <option value="Chaloda">Chaloda</option>
+                                                      <option value="Chandkheda">Chandkheda</option>
+                                                      <option value="Chandlodiya">Chandlodiya</option>
+                                                      <option value="Dabhoda">Dabhoda</option>
+                                                      <option value="Dariyapur">Dariyapur</option>
+                                                      <option value="Detroj">Detroj</option>
+                                                      <option value="Ellis Bridge">Ellis Bridge</option>
+                                                      <option value="Ghatlodiya">Ghatlodiya</option>
+                                                      <option value="Ghodasar">Ghodasar</option>
+                                                      <option value="Girdhar Nagar">Girdhar Nagar</option>
+                                                      <option value="Gita Mandir">Gita Mandir</option>
+                                                      <option value="Gomtipur">Gomtipur</option>
+                                                      <option value="Gota">Gota</option>
+                                                      <option value="Isanpur">Isanpur</option>
+                                                      <option value="Jamalpur">Jamalpur</option>
+                                                      <option value="Jagatpur">Jagatpur</option>
+                                                      <option value="Jawahar Chock">Jawahar Chock</option>
+                                                      <option value="Jodhpur">Jodhpur</option>
+                                                      <option value="Juhapura">Juhapura</option>
+                                                      <option value="Khanpur">Khanpur</option>
+                                                      <option value="Kalupur">Kalupur</option>
+                                                      <option value="Kalyanpura">Kalyanpura</option>
+                                                      <option value="Khadia">Khadia</option>
+                                                      <option value="Khodiyar Nagar">Khodiyar Nagar</option>
+                                                      <option value="Khokhra">Khokhra</option>
+                                                      <option value="Lambha">Lambha</option>
+                                                      <option value="Mirzapur">Mirzapur</option>
+                                                      <option value="Makarba">Makarba</option>
+                                                      <option value="Maninagar">Maninagar</option>
+                                                      <option value="Memnagar">Memnagar</option>
+                                                      <option value="Motera">Motera</option>
+                                                      <option value="Naroda">Naroda</option>
+                                                      <option value="Nikol">Nikol</option>
+                                                      <option value="Nava vadaj">Nava vadaj</option>
+                                                      <option value="Navrangpura">Navrangpura</option>
+                                                      <option value="Odhav">Odhav</option>
+                                                      <option value="Paldi">Paldi</option>
+                                                      <option value="Rajpur Gomtipur">Rajpur Gomtipur</option>
+                                                      <option value="Ramol">Ramol</option>
+                                                      <option value="Ranip">Ranip</option>
+                                                      <option value="Shahpur">Shahpur</option>
+                                                      <option value="Sabarmati">Sabarmati</option>
+                                                      <option value="Saraspur">Saraspur</option>
+                                                      <option value="Sardar Nagar">Sardar Nagar</option>
+                                                      <option value="Sarkhej">Sarkhej</option>
+                                                      <option value="Shah-e-alam">Shah-e-alam</option>
+                                                      <option value="Shahpur">Shahpur</option>
+                                                      <option value="Shahibaug">Shahibaug</option>
+                                                      <option value="Shashtri Nagar">Shashtri Nagar</option>
+                                                      <option value="Shubhas Bridge">Shubhas Bridge</option>
+                                                      <option value="Sukhrampura">Sukhrampura</option>
+                                                      <option value="Thakkar Bapa Nagar">Thakkar Bapa Nagar</option>
+                                                      <option value="Thaltej">Thaltej</option>
+                                                      <option value="Usmanpura">Usmanpura</option>
+                                                      <option value="Vatrapur">Vatrapur</option>
+                                                      <option value="Vastral">Vastral</option>
+                                                      <option value="Vejalpur">Vejalpur</option>
+                                                    </datalist>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-sm-6">
+                                                <div class="form-floating mb-4">
+                                                    <input type="text" name="age" value="{{user.u_age}}" class="form-control"
+                                                           id="floatingInput" required placeholder="name@example.com">
+                                                    <label for="floatingInput">Age</label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-11 col-md-8 col-lg-10 col-xl-8">
+                                        <button type="submit" class="btn col-6 col-lg-3 pt-2 pb- btn-primary mb-3">
+                                            Update
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div><!-- Container ending tag -->
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+<script>
+        AOS.init();
+      </script>
+</body>
+</html>
+

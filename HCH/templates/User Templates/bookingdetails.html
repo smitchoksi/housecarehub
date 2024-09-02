@@ -1,0 +1,233 @@
+{% extends "User Templates/Base.html" %}
+
+{% block content %}
+{% load get_sp_amount %}
+  <div id="BgColorLightGray" class="container-fluid">
+    <div class="row justify-content-center">
+      <div id="MyBookinDetailsPaymentsummarybox" class="col-11 col-sm-10 col-md-9 col-lg-6">     <!--For Adjustment-->
+        <div  class="row justify-content-center">
+            <div id="paymentsummaryheading" class="col-12">   <!--For Adjustment-->
+              <h2 class="text-center mt-3 mb-3">Service Payment Details</h2>
+            </div>
+        </div>
+        <div id="paymentsummarycontent" class="row justify-content-center ">
+          <div class="col-11 col-sm-10 col-md-9 col-lg-8 fw-medium"><!--For Adjustment-->
+            <div class="row justify-content-center">
+              <div class="col-8 col-md-9">
+                <p>{{service_obj.sname}}</p>
+              </div>
+              <div class="col-4 col-md-3">
+                <p><i class="bi bi-currency-rupee"></i>{{amount}}</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-8 col-md-9">
+                <p>Tax:</p>
+              </div>
+              <div class="col-4 col-md-3">
+                <p><i class="bi bi-currency-rupee"></i>{{tax}}</p>
+              </div>
+            </div>
+            <div class="row border-top border-2 border-success-subtle">
+              <div class="col-8 col-md-9">
+                <p>Total Payment:</p>
+              </div>
+              <div class="col-4 col-md-3">
+                <p><i class="bi bi-currency-rupee"></i>{{total}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% if sppayment %}
+      <div class="row justify-content-center mb-5">
+        <div id="MyBookinDetailsPaymentsummarybox" class="col-11 col-sm-10 col-md-9 col-lg-6">     <!--For Adjustment-->
+          <div  class="row justify-content-center">
+              <div id="paymentsummaryheading" class="col-12">   <!--For Adjustment-->
+                <h2 class="text-center mt-3 mb-3">Other Payment Details</h2>
+              </div>
+          </div>
+          <div id="paymentsummarycontent" class="row justify-content-center ">
+            <div class="col-11 col-sm-10 col-md-9 col-lg-8 "><!--For Adjustment-->
+                <div class="row mb-3">
+                  <div class="col-4"><h6>Name</h6></div>
+                  <div class="col-3"><h6>Price</h6></div>
+                  {% if booking_obj.service_id.scatname.catname == "Appliance" %}
+                    <div class="col-2"><h6>Qty</h6></div>
+                  {% else %}
+                    <div class="col-2"><h6>Sqf</h6></div>
+                  {% endif %}
+                  <div class="col-3"><h6>Amt</h6></div>
+                </div>
+                {% for usp in sppayment.updated_spareparts.all %}
+                 <div class="row">
+                    <div class="col-4">
+                      <p>{{usp.sparepart_id.sparepart_name}}</p>
+                    </div>
+                    <div class="col-3"><i class="bi bi-currency-rupee"></i>{{usp.sparepart_id.sparepart_price}}</div>
+                    {% if booking_obj.service_id.scatname.catname == "Appliance" %}
+                      <div class="col-2">{{usp.quantity}}</div>
+                      <div class="col-3"><i class="bi bi-currency-rupee"></i>{{usp.sparepart_id.sparepart_price|get_sparepart_amount:usp.quantity}}</div>
+                    {% else %}
+                      <div class="col-2">{{usp.square_feet}}</div>
+                      <div class="col-3"><i class="bi bi-currency-rupee"></i>{{usp.sparepart_id.sparepart_price|get_sparepart_amount:usp.square_feet}}</div>
+                    {% endif %}
+                  </div>
+                {% endfor %}
+              <div class="row fw-medium">
+                <div class="col-8 col-md-9">
+                  <p>Tax:</p>
+                </div>
+                <div class="col-4 col-md-3">
+                  <p><i class="bi bi-currency-rupee"></i>{{sppayment.sparepart_tax}}</p>
+                </div>
+              </div>
+              <div class="row border-top border-2 border-success-subtle fw-medium">
+                <div class="col-8 col-md-9">
+                  <p>Total Payment:</p>
+                </div>
+                <div class="col-4 col-md-3">
+                  <p><i class="bi bi-currency-rupee"></i>{{sppayment.sparepart_total_amount}}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+    <div class="row justify-content-center pb-5">
+      <div id="MyBookinDetailsbox" class="col-11 col-sm-10 col-md-9 col-lg-6 fw-medium">     <!--For Adjustment-->
+
+        <div id="bookingdetailsheading" class="row justify-content-center">
+          <div class="col-12 mb-3">   <!--For Adjustment-->
+            <h3 class="text-center mt-4 mb-3">Booking Details</h3>
+          </div>
+        </div>
+
+        <div id="bookingdetailscontent" class="row justify-content-center">
+          <div class="col-11 col-sm-10 col-md-9 col-lg-8"> <!-- For Adjustment -->
+            <div class="row justify-content-center mb-2">
+              <div class="col-5 col-md-5">
+                <p><b>Booking Id:</b></p>
+              </div>
+              <div class="col-7 col-md-7 ">
+                <p>{{booking_obj.id}}</p>
+              </div>
+              {% if task.status == "Closed" %}
+                <div class="col-5 col-md-5">
+                  <p><b>Booking Status:</b></p>
+                </div>
+                <div class="col-7 col-md-7 ">
+                  <p>{{task.status}}</p>
+                </div>
+              {% else %}
+                <div class="col-5 col-md-5">
+                  <p><b>Booking Status:</b></p>
+                </div>
+                <div class="col-7 col-md-7 ">
+                  <p>{{booking_obj.booking_status}}</p>
+                </div>
+              {% endif %}
+              <div class="col-5 col-md-5">
+                <p><b>Name:</b></p>
+              </div>
+              <div class="col-7 col-md-7 ">
+                <p>{{booking_obj.name}}</p>
+              </div>
+            </div>
+            <div class="row justify-content-center mb-2">
+              <div class="col-5 col-md-5 ">
+                <p><b>Contact No:</b></p>
+              </div>
+              <div class="col-7 col-md-7">
+                <p>{{booking_obj.contactno}}</p>
+              </div>
+            </div>
+            <div class="row justify-content-center mb-2">
+                  <div class="col-5 col-md-5">
+                    <p><b>Service Book on:</b> </p>
+                  </div>
+                  <div class="col-7 col-md-7">
+                      <p>{{booking_obj.booking_date_time}}</p>
+                  </div>
+            </div>
+            {% if booking_obj.booking_status == "Cancelled" %}
+              <div class="row justify-content-center mb-2">
+                <div class="col-5 col-md-5">
+                  <p><b>Service Cancelled on:</b> </p>
+                </div>
+                <div class="col-7 col-md-7">
+                    <p>{{booking_obj.cancelledtime}}</p>
+                </div>
+              </div>
+            {% else %}
+              {% if task.complete_time == None %}
+                <div class="row justify-content-center mb-2">
+                  <div class="col-5 col-md-5">
+                    <p><b>Service Closed on:</b> </p>
+                  </div>
+                  <div class="col-7 col-md-7">
+                    <p>{{task.close_task}}</p>
+                  </div>
+                </div>
+              {% else %}
+                <div class="row justify-content-center mb-2">
+                  <div class="col-5 col-md-5">
+                    <p><b>Service Completed on:</b> </p>
+                  </div>
+                  <div class="col-7 col-md-7">
+                    <p>{{task.complete_time}}</p>
+                  </div>
+                </div>
+              {% endif %}
+            {% endif %}
+
+            <div class="row justify-content-center mb-2">
+              <div class="col-5 col-md-5">
+                <p><b>Address:</b></p>
+              </div>
+              <div class="col-7 col-md-7">
+                <p>{{booking_obj.address}}</p>
+              </div>
+            </div>
+            <div class="row justify-content-center mb-2">
+              <div class="col-5 col-md-5">
+                <p><b>Area:</b></p>
+              </div>
+              <div class="col-7 col-md-7">
+                <p>{{booking_obj.area}}</p>
+              </div>
+            </div>
+            <div class="row justify-content-center mb-2">
+              <div class="col-5 col-md-5">
+                <p><b>City:</b></p>
+              </div>
+              <div class="col-7 col-md-7">
+                <p>{{booking_obj.city}}</p>
+              </div>
+            </div>
+            <div class="row justify-content-center mb-2">
+              <div class="col-5 col-md-5">
+                <p><b>State:</b></p>
+              </div>
+              <div class="col-7 col-md-7">
+                <p>{{booking_obj.state}}</p>
+              </div>
+            </div>
+            <div class="row justify-content-center mb-2">
+              <div class="col-5 col-md-5">
+                <p><b>Country:</b></p>
+              </div>
+              <div class="col-7 col-md-7">
+                <p>{{booking_obj.country}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+{% endblock %}

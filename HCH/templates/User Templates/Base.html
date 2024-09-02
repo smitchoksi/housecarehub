@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>House Care Hub</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+  <link rel="stylesheet" type="text/css" href="../static/css/FeedbackForm.css">
+  <link rel="stylesheet" type="text/css" href="static/css/style.css">
+  <link rel="stylesheet" type="text/css" href="static/css/ErrorBox.css">
+  <link rel="stylesheet" type="text/css" href="../static/css/style.css">
+  <link rel="stylesheet" type="text/css" href="../static/css/ErrorBox.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <script src="static/javascript/hch.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+</head>
+
+<body>
+
+  <!--Navbar-->
+  <nav class="navbar navbar-expand-lg rounded-4 bg-primary-subtle mt-1">
+  <div class="container-fluid">
+    <h3>House Care Hub</h3>
+    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+      <div class="offcanvas-header bg-primary-subtle">
+
+        <h5 class="offcanvas-title col-11 text-center col" id="offcanvasNavbarLabel">Menu</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </div>
+      <div class="offcanvas-body">
+        <ul class="navbar-nav justify-content-end flex-grow-1  pt-2 pt-lg-0 pe-3">
+          <li class="nav-item pt-2 pt-lg-0  pe-3">
+            <a class="nav-link" aria-current="page" href="/"><b>Home</b></a>
+          </li>
+          <li class="nav-item pt-2 pt-lg-0  pe-3">
+            <a class="nav-link" type="button" href="#AboutUs"><b>About us</b></a>
+          </li>
+          {% if request.session.user_email %}
+          <li class="nav-item pt-2 pt-lg-0 pe-3">
+            <a class="nav-link" data-bs-toggle="modal" type="button"  data-bs-target="#ContactUs"><b>Contact us</b></a>
+          </li>
+          <li class="nav-item pt-2 pt-lg-0 pe-3">
+            <a class="nav-link" href="/mybookings/On Going"><b>My Bookings</b></a>
+          </li>
+
+          <li class="nav-item pt-2 pt-lg-0 pe-3">
+            <a class="nav-link" href="/profile"><b>Profile</b></a>
+          </li>
+          {% else %}
+          <li class="nav-item pt-2 pt-lg-0 pe-3">
+            <a class="nav-link" href="/loginpage"><b>Login</b></a>
+          </li>
+          {% endif %}
+        </ul>
+        <hr>
+        <form action="/searchservice_result" method="post" class="d-flex pt-2 pt-lg-0 " role="search">
+          {% csrf_token %}
+          <input class="form-control me-2" type="search" name="search" list="serchservice" placeholder="Search Service" aria-label="Search">
+          <datalist id="serchservice">
+            {% for i in services %}
+                <option value="{{i.sname}}">{{i.sname}}</option>
+            {% endfor %}
+          </datalist>
+          <button class="btn btn-outline-success" type="submit"><b><i class="bi bi-search"></i></b></button>
+        </form>
+      </div>
+    </div>
+  </div>
+</nav>
+
+  <!-- Error Popup -->
+<!--  <div id="error-popup" class="popup">-->
+<!--        <div class="popup-content">-->
+<!--            <span class="close" type="button" onclick="togglePopup()" id="close-popup">&times;</span>-->
+<!--            <p id="error-message">This is an error message.</p>-->
+<!--            <button class="btn btn-primary">Ok</button>-->
+<!--        </div>-->
+<!--  </div>-->
+
+  <!-- Modals -->
+  <div class="modal fade" id="ContactUs" tabindex="-1" aria-labelledby="ContactUsModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content bg-secondary-subtle">
+                      <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="ContactUsModalLabel">You Can Submit Complaint Here</h1>
+                        <button type="button" onclick="valuenull('ContactUsForm')" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body mt-4 mb-5">
+                        <div class="row justify-content-center">
+                          <div class="col-10">
+                            <form id="ContactUsForm" action="/submitcomplaint" method="post" enctype="multipart/form-data">
+                              {% csrf_token %}
+                                <div class="form-floating mb-3">
+                                    <input required type="number" name="booking_id" value="{{i.id}}" class="form-control" id="floatingInput1"  oninvalid="this.setCus" placeholder="">
+                                    <label for="floatingInput1">Booking id</label>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <input required type="text" name="complaint_topic" value="{{complaint_topic}}" class="form-control" id="floatingInput2"  oninvalid="this.setCus" placeholder="">
+                                    <label for="floatingInput2">Complaint Title</label>
+                                </div>
+                                <div class="form-floating mb-3">
+                                  <textarea required class="form-control" name="complaint_desc" placeholder="" id="floatingTextarea2"  style="height: 100px">{{complaint_desc}}</textarea>
+                                  <label for="floatingTextarea2">Complaint Description:</label>
+                                </div>
+                                <div class="mb-3">
+                                  <label for="formFile" class="form-label">Select Photo</label>
+                                  <input class="form-control"  name="compaint_pic" value="{{compaint_pic}}" type="file" id="formFile">
+                                </div>
+                                <button class="btn btn-secondary mt-3" onclick="valuenull('ContactUsForm')" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary mt-3">Submit Complaint</button>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+  </div>
+
+
+<div class="modal fade" id="ApplyForJob" tabindex="-1" aria-labelledby="ApplyForJobModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content bg-secondary-subtle">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="ApplyForJobModalLabel">You Can Submit Information Here</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body mt-4 mb-5">
+        <div class="row justify-content-center">
+          <div class="col-10">
+            <form action="/" method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+                <div class="form-floating mb-3">
+                  <input type="text" class="form-control" id="floatingInputnName" required oninvalid="this.setCus" placeholder="">
+                  <label for="floatingInputnName">Enter Your Name</label>
+                </div>
+                <div class="form-floating mb-3">
+                  <input type="email" class="form-control" id="floatingInputEmail" required oninvalid="this.setCus" placeholder="">
+                  <label for="floatingInputEmail">Enter Your Email</label>
+                </div>
+                <div class="form-floating mb-3">
+                  <input type="tel" pattern="[0-9]{10}" class="form-control" id="floatingInputNumber" placeholder="" required>
+                  <label for="floatingInputNumber">Enter Your Contact No:</label>
+                  <p style="font-size: 13px;">Example like: 8866354728</p>
+                </div>
+                <select class="form-select mb-3 form-select-sm" required aria-label="Small select example">
+                  <option>Select Your Work Category</option>
+                  <option value="1">Appliance</option>
+                  <option value="2">Cleaning</option>
+                  <option value="3">Painting</option>
+                  <option value="3">Water proofing </option>
+                </select>
+                <div class="form-floating mb-3">
+                  <input type="text" class="form-control" id="floatingInputDoYouWant" required oninvalid="this.setCus" placeholder="">
+                  <label for="floatingInputDoYouWant">What Kind of Job Do You Want?</label>
+                </div>
+                <div class="form-floating mb-3">
+                  <input type="text" class="form-control" id="floatingInputWorkEx" required oninvalid="this.setCus" placeholder="">
+                  <label for="floatingInputWorkEx">Enter Your Work Experience</label>
+                </div>
+                {% if error %}
+                <div class="mb-3">
+                  <div class="alert alert-danger" role="alert">
+                    <p>{{error}}</p>
+                  </div>
+                </div>
+                {% endif %}
+                <button type="button" class="btn btn-secondary mt-3" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary mt-3">Submit</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  {% block content %}{% endblock %}
+
+    <!--About us (Footer)-->
+    <div id="AboutUs" class="row justify-content-end bg-dark text-white border mt-5">
+      <div class="col-md-11 col-10">
+        <div class="row mt-4">
+          <div class="col-xl-2 col-12">
+            <p class="fs-5 fw-semibold">Address Info:</p>
+          </div>
+          <div class="col-xl-3 col-12">
+            <p class="aboutusitemstyle"><i class="bi bi-geo-alt fs-5"></i> 210, Pushpank complex near parthesvar mahadev temple, isanpur, vatva road, ahmedabad, 382443</p>
+          </div>
+          <div class="col-xl-3 col-12">
+            <p class="aboutusitemstyle"><i class="bi bi-telephone fs-5"></i> +91 8866131152</p>
+          </div>
+          <div class="col-xl-3 col-12">
+            <p class="aboutusitemstyle"><i class="bi bi-envelope pe-2 fs-5"></i>housecarehub24@gmail.com</p>
+          </div>
+        </div>
+
+        <div class="row mt-4 mt-md-3">
+          <div class="col-xl-2 col-md-3 col-sm-12 col-12">
+            <p class="fs-5 fw-semibold">For Customer:</p>
+          </div>
+            <div class="col-xl-3 col-md-3 col-sm-4 col-12">
+              <a class="aboutuslinkstyle" >Privacy policy</a>
+            </div>
+            <div class="col-xl-3 col-md-3 col-sm-4 col-12">
+              <a class="aboutuslinkstyle">Terms and condition</a>
+            </div>
+            <div class="col-xl-3 col-md-3 col-sm-4 col-12">
+              <a class="aboutuslinkstyle" type="button" data-bs-toggle="modal" data-bs-target="#ContactUs">Contact us</a>
+            </div>
+        </div>
+
+<!--        <div class="row mt-4 mt-md-3 mb-2">-->
+<!--          <div class="col-xl-2 col-md-3 col-sm-12 col-12">-->
+<!--            <p class="fs-5 fw-semibold">For Workers:</p>-->
+<!--          </div>-->
+<!--            <div class="col-xl-3 col-md-3 col-sm-4 col-12">-->
+<!--             <a class="aboutuslinkstyle" type="button" data-bs-toggle="modal" data-bs-target="#ApplyForJob">Apply for job</a>-->
+<!--            </div>-->
+<!--            <div class="col-xl-3 col-md-3 col-sm-4 col-12">-->
+<!--              &lt;!&ndash; <a class="text-white-50" href="worker_terms&condition.html">Terms and condition</a> &ndash;&gt;-->
+<!--            </div>-->
+<!--            <div class="col-xl-3 col-md-3 col-sm-4 col-12">-->
+<!--              &lt;!&ndash;<a class="text-white-50" href="worker_privacypolicy.html">Privacy Policy</a>&ndash;&gt;-->
+<!--            </div>-->
+<!--        </div>-->
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous"></script>
+      <script>
+        AOS.init();
+      </script>
+</body>
+</html>

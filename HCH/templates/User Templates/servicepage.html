@@ -1,0 +1,225 @@
+{% extends "User Templates/Base.html" %}
+
+{% block content %}
+{% load feedback_average %}
+{% load feedback_counter %}
+
+
+  <div class="container-fluid">
+    <!--Cleaing sub Category Menu-->
+    
+    <div id="serviceheading" class="row">
+        <div class="col">
+            <p class="text-center fw-semibold fs-1" data-aos="zoom-in" >Our Services!</p>
+        </div>
+    </div>
+
+    <div id="servicecontent" class="row justify-content-center">
+      <div class="col-12 col-md-9 col-lg-8 col-xl-6">   <!--For Adjustment-->
+       <a class="link-underline-dark" href="/rate_card/{{subcat_id}}"><div class="row mb-3" data-aos="zoom-out" data-aos-duration="500">
+           <div class="col bg-dark text-white pt-3 pb-3 rounded-4"><h3 class="ps-5">Rate Card >></h3></div>
+       </div></a>
+      {% for i in services %}
+            <div id="{{i.id}}" class="card mb-4 bg-secondary-subtle" data-aos="zoom-in" data-aos-duration="500">
+              <div class="row g-0">
+                <div class="col-4 align-self-center">
+                  <img src="/media/{{ i.simage }}" class="img-fluid border rounded" alt="...">
+                </div>
+                    <div class="col-8">
+                      <div class="card-body">
+                        <h4 class="card-title">{{ i.sname }}</h4>
+                        <p class="card-text fw-semibold"><i class="bi bi-currency-rupee"></i>{{i.sprice}}</p>
+                          <p class="card-text fw-semibold"> <i class="bi bi-star-fill text-warning"></i> {{i.id|FeedbackAverage}} <a type="button" class="fw-normal" data-bs-toggle="modal" data-bs-target="#ViewMoreModal{{i.id}}"> View More...</a></p>
+                        <a href="/booknowpage/{{i.id}}"><p class="card-text btn btn-success mt-3">Book Now</p></a>
+                      </div>
+                    </div>
+              </div>
+            </div>
+
+            <div class="modal fade" id="ViewMoreModal{{i.id}}" tabindex="-1" aria-labelledby="ViewMoreModalLabel{{i.id}}" aria-hidden="true">
+                <div class="modal-dialog  modal-dialog-scrollable">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="ViewMoreModalLabel{{i.id}}"></h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body Description-modal-body">
+                        <div class="container-fluid px-1 mx-auto">
+                            <div class="row justify-content-center">
+                                <div class="col-12 text-center">
+                                    <div class="Description-text" id="viewmorecontent">
+                                        <div class="row justify-content-center" >
+                                            <div class="col">
+                                                <div class="row ">
+                                                    <div class="col-12 mb-4">
+                                                        <h3 class="text-center">
+                                                            Description
+                                                        </h3>
+                                                    </div>
+                                                    <div class="col-12 text-start fs-6">
+                                                        {% for j in i.sdescription %}
+                                                            <p><i class="bi bi-arrow-right pe-3"></i>{{j}}</p>
+                                                        {% endfor %}
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="Description-text" id="viewmorecontent">
+                                        <div class="row justify-content-center mb-4" >
+                                            <div class="col">
+                                                <div class="row justify-content-center">
+                                                    <div class="col-6">
+
+                                                        <div class="Description-rating-box mt-3">
+                                                            <h1 class="pt-4">{{i.id|FeedbackAverage}}</h1>
+                                                            <p class="">out of 5</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-6 ">
+                                                        <div class="justify-content-center mb-3">
+                                                            <table class="text-start mx-auto">
+                                                                <tr>
+                                                                    <td class="rating-label">
+                                                                        <i class="bi bi-star-fill text-warning"></i>
+                                                                        <i class="bi bi-star-fill text-warning"></i>
+                                                                        <i class="bi bi-star-fill text-warning"></i>
+                                                                        <i class="bi bi-star-fill text-warning"></i>
+                                                                        <i class="bi bi-star-fill text-warning"></i>
+                                                                    </td>
+                                                                    <td class="text-right">: {{i.id|FeedbackCounterFor_5Star}}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="rating-label">
+                                                                        <i class="bi bi-star-fill text-warning"></i>
+                                                                        <i class="bi bi-star-fill text-warning"></i>
+                                                                        <i class="bi bi-star-fill text-warning"></i>
+                                                                        <i class="bi bi-star-fill text-warning"></i>
+                                                                    </td>
+                                                                    <td class="text-right">: {{i.id|FeedbackCounterFor_4Star}}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="rating-label">
+                                                                        <i class="bi bi-star-fill text-warning"></i>
+                                                                        <i class="bi bi-star-fill text-warning"></i>
+                                                                        <i class="bi bi-star-fill text-warning"></i>
+                                                                    </td>
+                                                                    <td class="text-right">: {{i.id|FeedbackCounterFor_3Star}}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="rating-label">
+                                                                        <i class="bi bi-star-fill text-warning"></i>
+                                                                        <i class="bi bi-star-fill text-warning"></i>
+                                                                    </td>
+                                                                    <td class="text-right">: {{i.id|FeedbackCounterFor_2Star}}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="rating-label">
+                                                                        <i class="bi bi-star-fill text-warning"></i>
+                                                                    </td>
+                                                                    <td class="text-right">: {{i.id|FeedbackCounterFor_1Star}}</td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% for fb in feedbacks %}
+<!--                                        <h1>{{i.id}} == {{sb.service_id.id}}</h1>-->
+                                        {% if i.id == fb.service_id.id %}
+                                    <div class="viewmoreservicedetailscard2" >
+                                        <div class="row justify-content-center ">
+                                            <div class="col-12  mt-3">
+                                                <div class="row justify-content-center mt-3 ms-sm-4">
+                                                    <div class="col-3">
+                                                        <img class="profile-pic description-profile-pic" src="/media/{{fb.user_id.u_profilepic}}">
+                                                    </div>
+                                                    <div class="col-8 text-start ">
+                                                        <div class="row mt-2" >
+                                                            <div class="col-12" id="nameuser">
+                                                                        <h6>{{fb.user_id.u_fname}} {{fb.user_id.u_lname}}</h6>
+
+                                                                        {% if fb.rating == 5 %}
+                                                                            <p class="text-left" >
+                                                                                <i class="bi bi-star-fill description-star-active"></i>
+                                                                                <i class="bi bi-star-fill description-star-active"></i>
+                                                                                <i class="bi bi-star-fill description-star-active"></i>
+                                                                                <i class="bi bi-star-fill description-star-active"></i>
+                                                                                <i class="bi bi-star-fill description-star-active"></i>
+                                                                            </p>
+                                                                        {% elif fb.rating == 4 %}
+                                                                            <p class="text-left" >
+                                                                                <i class="bi bi-star-fill description-star-active"></i>
+                                                                                <i class="bi bi-star-fill description-star-active"></i>
+                                                                                <i class="bi bi-star-fill description-star-active"></i>
+                                                                                <i class="bi bi-star-fill description-star-active"></i>
+                                                                                <i class="bi bi-star-fill description-star-inactive"></i>
+                                                                            </p>
+                                                                        {% elif fb.rating == 3 %}
+                                                                            <p class="text-left" >
+                                                                                <i class="bi bi-star-fill description-star-active"></i>
+                                                                                <i class="bi bi-star-fill description-star-active"></i>
+                                                                                <i class="bi bi-star-fill description-star-active"></i>
+                                                                                <i class="bi bi-star-fill description-star-inactive"></i>
+                                                                                <i class="bi bi-star-fill description-star-inactive"></i>
+                                                                            </p>
+                                                                        {% elif fb.rating == 2 %}
+                                                                            <p class="text-left" >
+                                                                                <i class="bi bi-star-fill description-star-active"></i>
+                                                                                <i class="bi bi-star-fill description-star-active"></i>
+                                                                                <i class="bi bi-star-fill description-star-inactive"></i>
+                                                                                <i class="bi bi-star-fill description-star-inactive"></i>
+                                                                                <i class="bi bi-star-fill description-star-inactive"></i>
+                                                                            </p>
+                                                                        {% elif fb.rating == 1 %}
+                                                                            <p class="text-left" >
+                                                                                <i class="bi bi-star-fill description-star-active"></i>
+                                                                                <i class="bi bi-star-fill description-star-inactive"></i>
+                                                                                <i class="bi bi-star-fill description-star-inactive"></i>
+                                                                                <i class="bi bi-star-fill description-star-inactive"></i>
+                                                                                <i class="bi bi-star-fill description-star-inactive"></i>
+                                                                            </p>
+                                                                        {% endif %}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <h4 class="blue-text Description-blue-text mt-3">"{{fb.feedback_title}}"</h4>
+                                                            <p class="text-start ps-3 pe-3">{{fb.feedback_description}}</p>
+                                                    </div>
+                                                </div>
+                                                <div class="row text-start ps-3" style="color:rgb(61, 59, 57);">
+                                                        <div class="col-12" >
+                                                            <p class="">Date: {{fb.feedback_datetime}}</p>
+                                                        </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                        {% endif %}
+                                    {% endfor %}
+                             </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+<!--                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>-->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+        {% endfor %}
+
+      </div>
+    </div>
+  </div>
+
+
+{% endblock %}

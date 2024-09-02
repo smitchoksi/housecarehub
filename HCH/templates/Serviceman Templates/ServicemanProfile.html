@@ -1,0 +1,121 @@
+{% extends "Serviceman Templates/ServicemanBase.html" %}
+
+{% block content %}
+  <!-- Button trigger modal -->
+
+<!-- Logout Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Are You Sure?</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-footer">
+        <a type="button" href="/logout" class="btn btn-primary me-2" >Logout</a>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col">  <!-- For main Adjustment -->
+          <div class="row mt-3 m-0 m-sm-5 justify-content-center">
+            <div class="col-12 col-lg-4 bg-dark">  <!-- For box1 Adjustment -->
+
+              <div class="row justify-content-center text-center">
+                <div id="uprofilepicbox" class="col-8 col-md-3 col-lg-6 pt-4 pt-sm-0" data-aos="flip-right" data-aos-duration="1000">
+                  <a type="button" data-bs-toggle="modal" data-bs-target="#ChangeImage"><img id="uprofilepic" class="img-fluid" src="media/{{profilepic}}" style="height:200px; width:200px;"></a>
+<!--                  <img src="media/{{profilepic}}" class="img-thumbnail" alt="...">-->
+                </div>
+              </div>
+              <div class="row justify-content-center">
+                <div id="username" class="col-12"><h3 class="text-center">Hello! {{name}} </h3>
+                </div>
+              </div>
+
+            </div>
+            <div class="col-12 col-lg-8">
+              <div class="row">
+                <div class="col mt-2 mt-lg-0 ms-0 ms-lg-2 bg-dark-subtle">   <!--For box2 Adjustment-->
+                    <form>
+                      <div class="row justify-content-center">
+                      <div id="profiledetailsheading" class="col-12">
+                        <h2 class="text-center">Profile Details</h2>
+                      </div>
+                      <div class="col-11 col-md-8 col-lg-10 col-xl-8">
+                        <div class="row">
+                          <div class="col-12 col-sm-6">
+                            <div class="form-floating mb-4">
+                              <input type="text" value="{{name}}" class="form-control" readonly placeholder="name@example.com">
+                              <label for="floatingInput">Name:</label>
+                            </div>
+                          </div>
+                          <div class="col-12 col-sm-6">
+                            <div class="form-floating mb-4">
+                              <input type="tel" pattern="[0-9]{10}" name="contactno" value="{{contactno}}" class="form-control" placeholder="" readonly>
+                              <label for="floatingInput">Contact No</label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-11 col-md-8 col-lg-10 col-xl-8">
+                        <div class="row">
+                          <div class="col-12 col-sm-6">
+                            <div class="form-floating mb-4">
+                              <input type="text" value="{{category}}" class="form-control" readonly placeholder="name@example.com">
+                              <label for="floatingInput">Category:</label>
+                            </div>
+                          </div>
+                          <div class="col-12 col-sm-6">
+                            <div class="form-floating mb-4">
+                              <input type="text" value="{{work}}" class="form-control" placeholder="" readonly>
+                              <label for="floatingInput">Knowledge of Subcategory:</label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-11 col-md-8 col-lg-10 col-xl-8">
+                        <div class="form-floating mb-4">
+                          <input type="email" name="email" value="{{email}}" class="form-control"  readonly placeholder="name@example.com">
+                          <label for="floatingInput">Email:</label>
+                        </div>
+                      </div>
+                      <div class="col-11 col-md-8 col-lg-10 col-xl-8">
+                        <div class="form-floating mb-3">
+                          <textarea class="form-control" name="address" placeholder="" id="floatingTextarea2" readonly style="height: 100px">{{address}}</textarea>
+                          <label for="floatingTextarea2">Address</label>
+                        </div>
+                      </div>
+                      <div class="col-11 col-md-8 col-lg-10 col-xl-8">
+                        <div class="row">
+                          <div class="col-12 col-sm-6">
+                            <div class="form-floating mb-4">
+                              <input type="text" name="gender" value="{{gender}}" class="form-control" readonly placeholder="name@example.com">
+                              <label for="floatingInput">Gender</label>
+                            </div>
+                          </div>
+                          <div class="col-12 col-sm-6">
+                            <div class="form-floating mb-4">
+                              <input type="text" name="age" value="{{age}}" class="form-control" id="floatingInput" readonly placeholder="name@example.com">
+                              <label for="floatingInput">Age</label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      </div>
+                    </form>  
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+    </div><!-- Container ending tag -->
+{% endblock %}
+
+

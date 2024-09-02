@@ -1,0 +1,91 @@
+{% extends "User Templates/Base.html" %}
+
+{% block content %}
+
+{% if messages %}
+    {% for msg in messages %}
+      {% if msg.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+        <script>
+          Swal.fire({
+          title: "Success!",
+          text: "{{msg}}",
+          icon: "success"
+          });
+        </script>
+      {% elif msg.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+        <script>
+          Swal.fire({
+          title: "Opps...",
+          text: "{{msg}}",
+          icon: "error"
+          });
+        </script>
+      {% endif %}
+    {% endfor %}
+{% endif %}
+
+    <div class="container-fluid">
+      <div class="row justify-content-center">
+        <div id="loginbox" class="col-11 col-sm-10 col-md-7 col-lg-5 col-xl-4">     <!-- For Adjustment -->
+
+          <div class="row">
+            <div id="loginheading" class="col text-center">
+                <h2>Login</h2>
+            </div>
+          </div>
+          <form action="/checklogin_details" method="post">
+            {% csrf_token %}
+            <div id="logincontent" class="row justify-content-center align-items-center ">
+              <div class="col-11 col-sm-9">
+                <div class="form-floating mb-4">
+                  <input type="email" name="email" pattern="[a-z0-9._%+\-]+@[-z0-9.\-]+\.[a-z]{2,}$" value="{{uemail}}" class="form-control" id="email" required placeholder="name@example.com"
+									   oninput="
+									const email = this.value.trim();
+									const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+									if (!isValidEmail) {
+										this.setCustomValidity('Please enter a valid email address');
+										this.reportValidity();
+									} else {
+										this.setCustomValidity('');
+										this.reportValidity();
+									}"
+                  />
+                  <label for="email">Enter Your Email</label>
+                </div>
+              </div>
+              <div class="col-11 col-sm-9">
+                <div class="form-floating mb-4">
+                  <input type="password" name="password" value="{{upassword}}" class="form-control" id="floatingPassword" required placeholder="Password">
+                  <label for="floatingPassword">Enter Your Password</label>
+                </div>
+              </div>
+              {% if error %}
+              <div class="col-11 col-sm-9">
+                <div class="form-floating mb-4">
+                    <div class="alert alert-danger" role="alert">{{error}}</div>
+                </div>
+              </div>
+              {% endif %}
+
+              <div class="col-11 col-sm-9">
+                <div class="row">
+                  <div class="col-4">
+                    <button type="submit" class="btn btn-primary mb-3">Login</button>
+                  </div>
+                  <div class="col-8 align-self-center text-end">
+                    <a href="/forgetpassword_page">Forget Password?</a>
+                  </div>
+                </div>
+              </div>
+              <div class="col-11 col-sm-9 mt-2">
+                <p>Not a Customer? <a href="/signuppage">SignUp</a></p>
+                <p>Login as <a href="/admin">Admin</a></p>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div> <!-- Container Ending tag -->
+
+{% endblock %}

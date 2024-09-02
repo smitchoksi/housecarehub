@@ -1,0 +1,310 @@
+{% extends "User Templates/Base.html" %}
+
+{% block content %}
+
+<script>
+  function DateValidationForBooking()
+  {
+    var todayObj = new Date();
+    var y = todayObj.getFullYear();
+    console.log(todayObj.getMonth())
+    var m = ('0' + (todayObj.getMonth() + 1)).slice(-2);
+    var d = ('0' + todayObj.getDate()).slice(-2);
+    var todaydate = y + '-' + m + '-' + d;
+    console.log("Today Date:",todaydate);
+
+    var strdate = document.getElementById("booking_provide_date").value;
+    var dateObj = new Date(strdate);
+    var year = dateObj.getFullYear();
+    var month = ('0' + (dateObj.getMonth() + 1)).slice(-2);
+    var day = ('0' + dateObj.getDate()).slice(-2);
+    var selecteddate = year + '-' + month + '-' + day;
+    console.log("Selected Date:",selecteddate);
+
+    if (todaydate < selecteddate) {
+        console.log("Today's date is after",selecteddate);
+        document.getElementById("10AM").style.display = "block";
+        document.getElementById("13PM").style.display = "block";
+        document.getElementById("16PM").style.display = "block";
+    }
+    else {
+        console.log("Today's date is",selecteddate);
+        var currentTime = new Date();
+        var timeSlot1 = new Date();
+        timeSlot1.setHours(9); // For example, 9 AM
+        timeSlot1.setMinutes(0);
+        timeSlot1.setSeconds(0);
+        if (timeSlot1 > currentTime) {
+            document.getElementById("10AM").style.display = "block";
+        } else if (timeSlot1 < currentTime) {
+            document.getElementById("10AM").style.display = "none";
+        }
+
+        var timeSlot2 = new Date();
+        timeSlot2.setHours(12); // For example, 12 PM
+        timeSlot2.setMinutes(0);
+        timeSlot2.setSeconds(0);
+        console.log("Time Slot:",timeSlot2)
+        console.log("Current Time:",currentTime)
+        if (timeSlot2 > currentTime) {
+            document.getElementById("13PM").style.display = "block";
+        } else if (timeSlot2 < currentTime) {
+            document.getElementById("13PM").style.display = "none";
+        }
+
+        var timeSlot3 = new Date();
+        timeSlot3.setHours(15); // For example, 3 PM
+        timeSlot3.setMinutes(0);
+        timeSlot3.setSeconds(0);
+        if (timeSlot3 > currentTime) {
+            document.getElementById("16PM").style.display = "block";
+        } else if (timeSlot3 < currentTime) {
+            document.getElementById("16PM").style.display = "none";
+            alert("Please Select Another Date");
+        }
+    }
+  }
+</script>
+
+{% if messages %}
+    {% for msg in messages %}
+      {% if msg.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+        <script>
+          Swal.fire({
+          title: "Success!",
+          text: "{{msg}}",
+          icon: "success"
+          });
+        </script>
+      {% elif msg.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+        <script>
+          Swal.fire({
+          title: "Opps...",
+          text: "{{msg}}",
+          icon: "error"
+          });
+        </script>
+      {% endif %}
+    {% endfor %}
+{% endif %}
+  <div class="container-fluid">
+    <div class="row justify-content-center">
+      <div id="paymentsummarybox" class="col-11 col-sm-10 col-md-9 col-lg-6">     <!--For Adjustment-->
+
+        <div  class="row justify-content-center">
+            <div id="paymentsummaryheading" class="col-12">   <!--For Adjustment-->
+              <h2 class="text-center mt-3 mb-3">Payment Summary</h2>
+            </div>
+        </div>
+            
+        <div id="paymentsummarycontent" class="row justify-content-center ">
+          <div class="col-11 col-sm-10 col-md-9 col-lg-8 fw-medium"><!--For Adjustment-->
+            <div class="row justify-content-center">
+              <div class="col-8 col-md-9">
+                <p>{{service_name}}</p>
+              </div>
+              <div class="col-4 col-md-3">
+                <p><i class="bi bi-currency-rupee"></i>{{price}}</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-8 col-md-9">
+                <p>Tax:</p>
+              </div>
+              <div class="col-4 col-md-3">
+                <p><i class="bi bi-currency-rupee"></i>{{tax}}</p>
+              </div>
+            </div>
+            <div class="row border-top border-2 border-success-subtle">
+              <div class="col-8 col-md-9">
+                <p>Total Payment:</p>
+              </div>
+              <div class="col-4 col-md-3">
+                <p><i class="bi bi-currency-rupee"></i>{{total}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row justify-content-center">
+      <div id="bookingdetailsbox" class="col-11 col-sm-10 col-md-9 col-lg-6 fw-medium">     <!--For Adjustment-->
+
+        <div id="bookingdetailsheading" class="row justify-content-center">
+          <div class="col-12">   <!--For Adjustment-->
+            <h3 class="text-center mt-4 mb-3">Check Your Details & Select Time Slot</h3>
+          </div>
+        </div>
+
+        <div id="bookingdetailscontent" class="row justify-content-center">
+          <div class="col-11 col-sm-10 col-md-9 col-lg-8"> <!-- For Adjustment -->
+            <div class="row">
+              <div class="col">
+                <form action="/bookingdone" method="post">
+                  {% csrf_token %}
+                  <input type="number" hidden  name="service_id" value="{{service_id}}">
+                  <div class="form-floating mb-3">
+                    <input type="text" class="form-control" name="name" value="{{name}}" id="floatingInput" placeholder="" required>
+                    <label for="floatingInput">Enter Your Name</label>
+                  </div>
+                  <div class="form-floating mb-3">
+                    <input type="tel" pattern="[0-9]{10}" name="contactno" value="{{contactno}}" class="form-control" id="floatingInput" placeholder="" required>
+                    <label for="floatingInput">Enter Your Contact No</label>
+                  </div>
+                  <div class="form-floating mb-3">
+                    <textarea class="form-control" name="address"  placeholder="" id="floatingTextarea2" required style="height: 100px">{{address}}</textarea>
+                    <label for="floatingTextarea2">Enter Your Address</label>
+                  </div>
+                  <div class="form-floating mb-3">
+                    <input type="text" name="area" value="{{area}}" list="listofarea" class="form-control" id="floatingInput" placeholder="" required>
+                    <label for="floatingInput">Enter Your Area</label>
+                    <datalist id="listofarea">
+                      <option selected>None</option>
+                      <option value="Alam Roza">Alam Roza</option>
+                      <option value="Ambawadi">Ambawadi</option>
+                      <option value="Amraiwadi">Amraiwadi</option>
+                      <option value="Asarwa">Asarwa</option>
+                      <option value="Badarkha">Badarkha</option>
+                      <option value="Bahiyal">Bahiyal</option>
+                      <option value="Bapunagar">Bapunagar</option>
+                      <option value="Behrampura">Behrampura</option>
+                      <option value="Bodakdev">Bodakdev</option>
+                      <option value="Maninagar">Maninagar</option>
+                      <option value="Chaloda">Chaloda</option>
+                      <option value="Chandkheda">Chandkheda</option>
+                      <option value="Chandlodiya">Chandlodiya</option>
+                      <option value="Dabhoda">Dabhoda</option>
+                      <option value="Dariyapur">Dariyapur</option>
+                      <option value="Detroj">Detroj</option>
+                      <option value="Ellis Bridge">Ellis Bridge</option>
+                      <option value="Ghatlodiya">Ghatlodiya</option>
+                      <option value="Ghodasar">Ghodasar</option>
+                      <option value="Girdhar Nagar">Girdhar Nagar</option>
+                      <option value="Gita Mandir">Gita Mandir</option>
+                      <option value="Gomtipur">Gomtipur</option>
+                      <option value="Gota">Gota</option>
+                      <option value="Isanpur">Isanpur</option>
+                      <option value="Jamalpur">Jamalpur</option>
+                      <option value="Jagatpur">Jagatpur</option>
+                      <option value="Jawahar Chock">Jawahar Chock</option>
+                      <option value="Jodhpur">Jodhpur</option>
+                      <option value="Juhapura">Juhapura</option>
+                      <option value="Khanpur">Khanpur</option>
+                      <option value="Kalupur">Kalupur</option>
+                      <option value="Kalyanpura">Kalyanpura</option>
+                      <option value="Khadia">Khadia</option>
+                      <option value="Khodiyar Nagar">Khodiyar Nagar</option>
+                      <option value="Khokhra">Khokhra</option>
+                      <option value="Lambha">Lambha</option>
+                      <option value="Mirzapur">Mirzapur</option>
+                      <option value="Makarba">Makarba</option>
+                      <option value="Maninagar">Maninagar</option>
+                      <option value="Memnagar">Memnagar</option>
+                      <option value="Motera">Motera</option>
+                      <option value="Naroda">Naroda</option>
+                      <option value="Nikol">Nikol</option>
+                      <option value="Nava vadaj">Nava vadaj</option>
+                      <option value="Navrangpura">Navrangpura</option>
+                      <option value="Odhav">Odhav</option>
+                      <option value="Paldi">Paldi</option>
+                      <option value="Rajpur Gomtipur">Rajpur Gomtipur</option>
+                      <option value="Ramol">Ramol</option>
+                      <option value="Ranip">Ranip</option>
+                      <option value="Shahpur">Shahpur</option>
+                      <option value="Sabarmati">Sabarmati</option>
+                      <option value="Saraspur">Saraspur</option>
+                      <option value="Sardar Nagar">Sardar Nagar</option>
+                      <option value="Sarkhej">Sarkhej</option>
+                      <option value="Shah-e-alam">Shah-e-alam</option>
+                      <option value="Shahpur">Shahpur</option>
+                      <option value="Shahibaug">Shahibaug</option>
+                      <option value="Shashtri Nagar">Shashtri Nagar</option>
+                      <option value="Shubhas Bridge">Shubhas Bridge</option>
+                      <option value="Sukhrampura">Sukhrampura</option>
+                      <option value="Thakkar Bapa Nagar">Thakkar Bapa Nagar</option>
+                      <option value="Thaltej">Thaltej</option>
+                      <option value="Usmanpura">Usmanpura</option>
+                      <option value="Vatrapur">Vatrapur</option>
+                      <option value="Vastral">Vastral</option>
+                      <option value="Vejalpur">Vejalpur</option>
+                    </datalist>
+                  </div>
+                  <div class="form-floating mb-3">
+                    <input type="text" name="city" readonly value="{{city}}"  class="form-control" id="floatingInputDisabled"  placeholder="" required>
+                    <label for="floatingInputDisabled">Enter Your City</label>
+                  </div>
+                  <div class="form-floating mb-3">
+                    <input type="text" name="state" readonly value="{{state}}" class="form-control" id="floatingInputDisabled" placeholder="" required>
+                    <label for="floatingInputDisabled">Enter Your State</label>
+                  </div>
+                  <div class="form-floating mb-3">
+                    <input type="text" name="country" readonly value="{{country}}" class="form-control" id="floatingInputDisabled" placeholder="" required>
+                    <label for="floatingInputDisabled">Enter Your Country</label>
+                  </div>
+                  <div class="row mb-3">
+                    <div class="col">
+                      <select class="form-select" id="booking_provide_date" onchange="DateValidationForBooking();" name="booking_provide_date" aria-label="Default select example" required>
+                        <option value="">Select Date</option>
+                        <option value="{{today}}">{{today}}</option>
+                        <option value="{{tomrrow}}">{{tomrrow}}</option>
+                        <option value="{{previousday}}">{{previousday}}</option>
+                        <option value="{{previousday_plus_one}}">{{previousday_plus_one}}</option>
+                        <option value="{{previousday_plus_two}}">{{previousday_plus_two}}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="row mb-3">
+                    <div class="col">
+                      <select class="form-select" name="booking_provide_time" aria-label="Default select example" required>
+                        <option value="">Select Time</option>
+                        <option id="10AM" value="10:00 AM">10:00 AM</option>
+                        <option id="13PM" value="1:00 PM">1:00 PM</option>
+                        <option id="16PM" value="4:00 PM">4:00 PM</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col mb-3">
+                    {% if error %}
+                      <div class="form-floating mb-3">
+                        <div class="alert alert-danger" role="alert">{{error}}</div>
+                      </div>
+                    {% endif%}
+                  </div>
+                  <div class="col-auto">
+                    <button type="button" data-bs-toggle="modal" data-bs-target="#PaymentModal" class="btn btn-primary mt-3 mb-3">Make Payment</button>
+                  </div>
+
+                  <!-- Payment Modal -->
+                    <div class="modal fade" id="PaymentModal" tabindex="-1" aria-labelledby="PaymentModalLabel" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content bg-secondary-subtle">
+                          <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="PaymentModalLabel">Payment Using UPI</h1>
+                            <button type="button" onclick="valuenull('ContactUsForm')" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body mt-4">
+                            <div class="row justify-content-center">
+                              <div class="col-10">
+                                    <div class="form-floating mb-3">
+                                        <input required type="text" pattern="[A-Za-z0-9]{2,20}@[A-Za-z]{2,40}" title="REQUESTED FORMATE: maheshparmar@okaxiz" name="upi_id" class="form-control" id="floatingInput1"  oninvalid="this.setCus" placeholder="">
+                                        <label for="floatingInput1">Enter UPI ID</label>
+                                        <button type="submit" class="btn btn-primary mt-3">Procced</button>
+                                    </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  <!-- Modal Close here -->
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

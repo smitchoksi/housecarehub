@@ -1,0 +1,118 @@
+{% extends "User Templates/Base.html" %}
+
+{% block content %}
+
+{% if messages %}
+    {% for msg in messages %}
+      {% if msg.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+        <script>
+          Swal.fire({
+          title: "Success!",
+          text: "{{msg}}",
+          icon: "success"
+          });
+        </script>
+      {% elif msg.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+        <script>
+          Swal.fire({
+          title: "Opps...",
+          text: "{{msg}}",
+          icon: "error"
+          });
+        </script>
+      {% endif %}
+    {% endfor %}
+{% endif %}
+
+{% if error %}
+  <style>
+    #container{
+      opacity: 0.1;
+    }
+  </style>
+  <div id="error-popup" class="popup">
+        <div class="close" type="button" onclick="togglePopupClose()" id="close-popup">&times;</div>
+        <div class="popupheading"><b>Error!</b></div>
+        <div class="popup-content">
+            <p id="error-message"><b>{{error}}</b></p>
+            <button class="btn btn-primary" data-bs-toggle="modal" type="button" data-bs-target="#ContactUs">Ok</button>
+        </div>
+  </div>
+{% endif %}
+{% if success %}
+    <script>
+      Swal.fire({
+      title: "Success!",
+      text: "{{success}}",
+      icon: "success"
+      });
+    </script>
+{% endif %}
+  <div class="container-fluid" id="container">
+    <!-- Main Category Menu-->
+    <div id="menumainrow" class="row justify-content-center background">
+      <div id="menuheading" class="col-12 col-md-10">
+        <p class="text-center fw-semibold fs-1" data-aos="zoom-in">We Offer This Category Related Service!</p>
+      </div>
+
+      <div id="categorymainrow" class="row justify-content-center">
+        <div class="col-sm-7 col-md-9 col-lg-7 col-10">
+          <div class="row justify-content-evenly" data-aos="flip-right" data-aos-duration="1500">
+
+          <!--{% for i in data %}
+            <div class="menuitemstyle mt-3 mt-sm-4 mt-md-0 col-md-2 col-5 text-center">
+                <a href="/subcategorypage/{{ i.id }}"><img src="media/{{ i.catimage }}" class="img-fluid" alt="..."></a>
+                <p class="fw-semibold fs-6">{{ i.catname }}</p>
+            </div>
+          {% endfor %}-->
+
+            {% for i in category %}
+              <div class="col-md-3 col-5">
+                <div class="row justify-content-center text-center">
+                  <div class="animate__rubberBand menuitemstyle col-11 mt-4 mt-sm-5 mt-md-3 mt-lg-4" data-aos="flip-right" data-aos-duration="1500">
+                    <a href="/subcategorypage/{{ i.id }}"><img src="media/{{ i.catimage }}" class="img-fluid" alt="..."></a>
+                  </div>
+                  <p data-aos="flip-right" data-aos-duration="1500">{{ i.catname }}</p>
+                </div>
+              </div>
+            {% endfor %}
+
+          </div>
+        </div>
+      </div> 
+    </div>
+
+    <div id="featurecontent" class="row">
+      <div class="col">
+        <p class="text-center fs-2 fw-medium">Why We Different With Others?</p>
+      </div>
+    </div>
+
+    <div class="row justify-content-evenly">
+      <div class="col-10 col-md-4 col-xl-3 mt-4">
+        <p class="text-center"><i class="bi bi-tools" style="font-size: 35px;"></i></p>
+        <p class="text-center fw-semibold fs-4">Quality of Service</p>
+        <div class="row justify-content-center">
+          <div class="col-9 text-center">We provide best quality service and we provide 7 day warranty of our service</div>
+        </div>
+      </div>
+
+      <div class="col-10 col-md-4 col-xl-3 mt-4">
+        <p class="text-center"><i class="bi bi-people-fill" style="font-size: 35px;"></i></p>
+        <p class="text-center fw-semibold fs-4">Expert Team</p>
+        <div class="row justify-content-center">
+          <div class="col-9 text-center">Our worker is very intteligent also well trained and experienced</div>
+        </div>
+      </div>
+
+      <div class="col-10 col-md-4 col-xl-3 mt-4">
+        <p class="text-center"><i class="bi bi-hourglass-split" style="font-size: 35px;"></i></p>
+        <p class="text-center fw-semibold fs-4">Service On time</p>
+        <div class="row justify-content-center">
+          <div class="col-9 text-center">We provide service on time to time no any delay issue</div>
+        </div>
+      </div>
+    </div>
+
+  </div>  <!-- Container ending tag -->
+{% endblock %}

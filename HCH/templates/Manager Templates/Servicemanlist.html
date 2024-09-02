@@ -1,0 +1,97 @@
+{% extends "Manager Templates/ManagerBase.html" %}
+
+{% block content %}
+    <style>
+
+      @media only screen and (max-width: 575px) and (min-width:373px){
+        .myclass{
+            width:70%;
+            margin-left: 15%;
+        }
+      }
+
+    </style>
+
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col">
+                <h1 class="ServicemanListHeading text-center" data-aos="zoom-in" data-aos-offset="200">List of Service Man </h1>
+            </div>
+          </div>
+
+          <div class="row justify-content-center">
+                          <div class="col-12 col-lg-10 col-xl-11 col-md-12 col-sm-11"> <!--for adjustement-->
+                            <div class="row justify-content-center text-center">
+                              {% for i in listofserviceman %}
+                              <div id="{{i.id}}" class="mb-2 mb-sm-3 col-xl-3  col-lg-4 col-md-4 col-sm-6 col-12" data-aos="flip-right">
+                                <div class="row m-2 ServicemanList">
+                                  <div class="col-12 ">
+                                    <a href="/view_serviceman_profile/{{i.id}}"><img class="ServicemanListImg" src="/media/{{i.sm_profile_pic}}"  alt="..."></a>
+                                  </div>
+                                    <div class="col-12">
+                                      <p class="fw-semibold">{{i.sm_name}}</p>
+                                    </div>
+                                  <div class="col-12">
+                                  <p class="fw-semibold">{{i.sm_email}}</p>
+                                  </div>
+                                  <div class="col-12">
+                                    <p class="fw-semibold">Category: {{i.sm_Knowledge_of_category}}</p>
+                                  </div>
+                                  <div class="col-12">
+                                    <p class="fw-semibold"><b>Knowledge of Subcategory :-</b></p>
+                                  </div>
+                                  <div class="col-12">
+                                    <p class="fw-semibold"><b>{{i.sm_knowledge_of_subcategory}}</b></p>
+                                  </div>
+                                  <div class="col-12 ">
+                                    <p class="fw-semibold">Status: "{{i.sm_status}}"</p>
+                                  </div>
+                                  <div class="col-12 text-center mb-3">
+                                    <a href="/listofservicemantasks/{{i.id}}" type="button" class="btn btn-success">Task List</a>
+                                  </div>
+                                </div>
+                              </div>
+
+                              {% endfor %}
+                            </div>
+                        </div>
+          </div>
+        </div> <!-- Container Ending tag -->
+
+    
+<!--modal-->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog  modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Status</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="card mb-3">
+          <div class="row g-0 justify-content-center">
+            <div class="col-auto col-sm-4 align-self-center pe-2">
+              <img src="download_5.jpeg" class="img-fluid border rounded" alt="...">
+            </div>
+                <div class="col-auto col-sm-8">
+                  <div class="card-body" id="details">
+                    <p class="card-title">Name: smit choksi<p>
+                    <p class="card-text">Email: smitchoksi219@gmail.com</p>
+                    <p class="card-text mt-3"> Status: Available</p>
+                   
+                  </div>
+                </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+       <a href="pendding.html"  type="button" class="btn btn-primary">Assign Task</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+ 
+  
